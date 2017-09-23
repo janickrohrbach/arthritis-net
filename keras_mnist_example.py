@@ -71,9 +71,17 @@ def conv_model():
 # build the model
 model = conv_model()
 
+# tensorboard callback
+tb_callback = callbacks.TensorBoard(log_dir="./tensorboard/base_model",
+                                    histogram_freq=0,
+                                     write_graph=True, write_images=True)
+
+# terminal:
+# tensorboard --logdir=/Users/janickrohrbach/Desktop/dl_project_1/tensorboard
+
 # Fit the model
-model.fit(x=img_train, y=labels_train, batch_size=200, epochs=20, verbose=2,
-          validation_data=(img_test, labels_test))
+model.fit(x=img_train, y=labels_train, batch_size=200, epochs=15, verbose=2,
+          callbacks=[tb_callback], validation_data=(img_test, labels_test))
 
 
 # Final evaluation of the model
