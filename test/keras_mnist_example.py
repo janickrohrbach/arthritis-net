@@ -8,14 +8,12 @@ from keras.datasets import mnist
 # keras imports
 from tensorflow.contrib.keras.python.keras.models import Sequential
 from tensorflow.contrib.keras.python.keras.layers import Dense, Dropout, \
-    Flatten, Activation
+    Flatten
 from tensorflow.contrib.keras.python.keras.layers.convolutional import \
     Conv2D, MaxPooling2D
-from tensorflow.contrib.keras.python.keras.utils import np_utils
+from tensorflow.contrib.keras.python.keras.utils import to_categorical
 from tensorflow.contrib.keras.python.keras import backend as K
 from tensorflow.contrib.keras.python.keras import callbacks
-from tensorflow.contrib.keras.python.keras.layers.normalization import \
-    BatchNormalization
 
 # import matplotlib
 import matplotlib.pyplot as plt
@@ -40,12 +38,14 @@ img_train = img_train / 255
 img_test = img_test / 255
 
 # one hot encode outputs
-labels_train = np_utils.to_categorical(labels_train)
-labels_test = np_utils.to_categorical(labels_test)
+# Converts a class vector (integers) to binary class matrix.
+# E.g. for use with categorical_crossentropy.
+labels_train = to_categorical(labels_train)
+labels_test = to_categorical(labels_test)
 num_classes = labels_test.shape[1]
 
-def conv_model():
 
+def conv_model():
     # create model
     model = Sequential()
     model.add(Conv2D(filters=30, kernel_size=(5, 5), input_shape=(28, 28, 1),
@@ -64,26 +64,27 @@ def conv_model():
 
     # Compile model
     model.compile(optimizer="adam", loss="categorical_crossentropy",
-                    metrics=["accuracy"])
+                  metrics=["accuracy"])
 
     return model
+
 
 # build the model
 model = conv_model()
 
 # tensorboard callback
 tb_callback = callbacks.TensorBoard(log_dir="./tensorboard/base_model",
-                                    histogram_freq=0,
-                                     write_graph=True, write_images=True)
+                                    histogram_freq=0, write_graph=True,
+                                    write_images=True)
 
 # terminal:
-# tensorboard --logdir=/Users/janickrohrbach/Desktop/dl_project_1/tensorboard
+# tensorboard --logdir=/Users/janickrohrbach/Desktop/dl_project_1
+# /test/tensorboard
 
 # Fit the model
 model.fit(x=img_train, y=labels_train, batch_size=200, epochs=15, verbose=2,
           callbacks=[tb_callback], validation_data=(img_test, labels_test))
 
-
 # Final evaluation of the model
 scores = model.evaluate(img_test, labels_test, verbose=0)
-print("Error: %.2f%%" % (100 - scores[1]*100))
+print("Error: %.2f%%" % (100 - scores[1] * 100))
