@@ -82,9 +82,12 @@ tb_callback = callbacks.TensorBoard(log_dir="./tensorboard/base_model",
 # /test/tensorboard
 
 # Fit the model
-model.fit(x=img_train, y=labels_train, batch_size=200, epochs=15, verbose=2,
+model.fit(x=img_train, y=labels_train, batch_size=200, epochs=10, verbose=2,
           callbacks=[tb_callback], validation_data=(img_test, labels_test))
 
 # Final evaluation of the model
 scores = model.evaluate(img_test, labels_test, verbose=0)
 print("Error: %.2f%%" % (100 - scores[1] * 100))
+
+# Save the model
+model.save(filepath="./models/base_model.h5")
