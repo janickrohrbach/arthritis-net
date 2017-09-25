@@ -48,16 +48,18 @@ num_classes = labels_test.shape[1]
 def conv_model():
     # create model
     model = Sequential()
-    model.add(Conv2D(filters=30, kernel_size=(5, 5), input_shape=(28, 28, 1),
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(28, 28, 1),
                      activation="relu", kernel_initializer="he_normal"))
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), activation="relu"))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(filters=15, kernel_size=(3, 3), activation="relu"))
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     model.add(Dense(units=128, kernel_initializer="he_normal",
                     activation="relu"))
-    model.add(Dropout(rate=0.2))
-    model.add(Dense(units=50, kernel_initializer="he_normal",
+    model.add(Dropout(rate=0.3))
+    model.add(Dense(units=128, kernel_initializer="he_normal",
                     activation="relu"))
     model.add(Dense(units=num_classes, activation="softmax",
                     kernel_initializer="he_normal"))
@@ -71,9 +73,10 @@ def conv_model():
 
 # build the model
 model = conv_model()
+model.summary()
 
 # tensorboard callback
-tb_callback = callbacks.TensorBoard(log_dir="./tensorboard/base_model",
+tb_callback = callbacks.TensorBoard(log_dir="./tensorboard/2nd_model",
                                     histogram_freq=0, write_graph=True,
                                     write_images=True)
 
@@ -90,4 +93,10 @@ scores = model.evaluate(img_test, labels_test, verbose=0)
 print("Error: %.2f%%" % (100 - scores[1] * 100))
 
 # Save the model
-model.save(filepath="./models/base_model.h5")
+# serialize model to JSON
+model_json = model.to_json()
+with open("./models/2nd_model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights("./models/2nd_model.h5")
+print("Saved model to disk")
