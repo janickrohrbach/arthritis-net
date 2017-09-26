@@ -27,15 +27,15 @@ shinyServer(function(input, output) {
       output$image <- renderImage({
         outfile <- tempfile(fileext = ".png")
 
-        png(filename = outfile, width = 200, height = 200)
+        png(filename = outfile, width = 350, height = 350)
         tmp <- image_read(path = paste0("./upload/", img_name))
         plot(tmp)
         dev.off()
 
         list(src = outfile,
              contentType = "image/png",
-             width = 200,
-             height = 200)
+             width = 350,
+             height = 350)
       }, deleteFile = TRUE)
 
     img <- image_load(paste0("./upload/", img_name), target_size = c(28, 28), grayscale = TRUE)
