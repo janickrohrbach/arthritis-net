@@ -15,7 +15,9 @@ library(magick)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
-  model = load_model_hdf5("/Users/janickrohrbach/Desktop/dl_project_1/test/models/base_model.h5")
+  model = load_model_hdf5(
+    "/Users/janickrohrbach/Desktop/dl_project_1/app/model/1st_model.h5"
+    )
 
 
     # predict
@@ -38,18 +40,24 @@ shinyServer(function(input, output) {
              height = 350)
       }, deleteFile = TRUE)
 
-    img <- image_load(paste0("./upload/", img_name), target_size = c(28, 28), grayscale = TRUE)
+    img <- image_load(paste0("./upload/", img_name), target_size = c(256, 256),
+                      grayscale = TRUE)
 
     x <- image_to_array(img)
     x <- x / 255
-    dim(x) <- c(1, 28, 28, 1)
+    dim(x) <- c(1, 256, 256, 1)
 
     pred <- predict_proba(object = model, x = x)
     pred <- as.matrix(pred)
-    colnames(pred) <- 0:9
+    colnames(pred) <- c("FOOT_BOTH", "FOOT_LEFT", "FOOT_RIGHT", "HAND_BOTH",
+                        "HAND_LEFT", "HAND_RIGHT")
+
+    print(predict_classes(object = model, x = x))
 
     output$probs <- renderPlot({
-      barplot(height = pred, ylab = "probability", horiz = TRUE)
+      par(mar = c(5.1,7.1,4.1,2.1))
+      barplot(height = pred, ylab = "", main = "probability", horiz = TRUE,
+              las = 2)
     })
   })
 
