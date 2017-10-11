@@ -12,6 +12,10 @@
 % for references
 \usepackage{biblatex}
 \addbibresource{references.bib}
+% for multiple images
+\usepackage{subfig}
+% for automatic reference prefix
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -25,7 +29,7 @@ Deep learning classification of rheumatoid arthritis\\
   \textbf{Author:} & Janick Rohrbach \\
   \textbf{Supervisor:} & Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
   \textbf{Industrial Partner:} & Seantis GmbH \\
-  \textbf{External Supervisor:} & Fabian Reinhard \\ & Tobias Reinhard \\
+  \textbf{External Supervisor:} & Fabian Reinhard \\ & Dr. Tobias Reinhard \\
   \textbf{Date:} & December 12, 2017
 \end{tabular}}
 \date{}
@@ -52,6 +56,8 @@ Abstract goes here
 \section*{Acknowledgements}
 I want to thank...
 
+A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
+
 \newpage
 
 \tableofcontents
@@ -59,15 +65,26 @@ I want to thank...
 \newpage
 
 \section{Introduction}
+
+Rheumatoid arthritis is caused by a malfunctioning immune system. It is therefore a type of autoimmune diseases. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable.
+
+Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. Recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
+
+The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation runs a national registry of inflammatory rheumatic diseases. They have anonymized da
+
+\cite{scqm_about} 
+
+
+
+
 Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche • Stand der Technik: Bisherige Lösungen des Problems und deren Grenzen • (Nennt kurz den Industriepartner und/oder weitere Kooperationspartner und dessen/deren Interesse am Thema Fragestellung) 
 
 Formuliert das Ziel der Arbeit • Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang • (Pflichtenheft, Spezifikation) • (Spezifiziert die Anforderungen an das Resultat der Arbeit) • (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor) • (Angaben zum Zielpublikum: nennt das für die Arbeit vorausgesetzte Wissen) • (Terminologie: Definiert die in der Arbeit verwendeten Begriffe) 
 
-\section{Chapter Two Title}
-\subsection{Rheumatoid arthritis}
-\label{subsec:rheuma}
+\subsection{Related literature}
 
-Rheumatoid arthritis is caused by a malfunctioning immune system. The immune attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the joint can occur, if the inflammation lasts for a long time. \cite{rheuma}
+
+\section{Theory}
 
 \subsection{Convolutional neural networks}
 \label{subsec:cnn}
@@ -76,26 +93,28 @@ Convolutional neural networks take an image as an input. The image then gets pas
 \subsection{Rau classification}
 \label{subsec:rau}
 
+\section{Methods}
+
+
+\section{Predicting Rau scores}
+
+
+
 \begin{figure}
-\includegraphics[width=10cm]{labels}	
+\includegraphics[width=10cm]{joints}	
 \caption{Proximal interphalangeal joints (PIP) and carpometacarpal joints (MCP).}
-\floatfoot{Image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
-\label{fig:labels}
+\floatfoot{Original image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
+\label{fig:joints}
 \end{figure}
 
 
+\section{Results}
 
-\section{Chapter Three Title}
 
-
-\section{Chapter Four Title}
+\section{Discussion}
 
 
 \section{Conclusion}
-
-
-
-
 
 
 
