@@ -30,7 +30,8 @@ Deep learning classification of rheumatoid arthritis\\
   \textbf{Supervisor:} & Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
   \textbf{Industrial Partner:} & Seantis GmbH \\
   \textbf{External Supervisor:} & Fabian Reinhard \\ & Dr. Tobias Reinhard \\
-  \textbf{Date:} & December 12, 2017
+  \textbf{Date:} & December 12, 2017 \\
+  \hspace{6.0cm} & \hspace{6.0cm}
 \end{tabular}}
 \date{}
 \maketitle
@@ -66,6 +67,10 @@ A list of rheumatology offices and hospitals that are contributing to the SCQM r
 
 \section{Introduction}
 
+This thesis shows a method for the automated scoring of x-ray images of patients with rheumatoid arthritis. 
+
+\subsection{Background}
+
 Rheumatoid arthritis is caused by a malfunctioning immune system. It is therefore a type of autoimmune diseases. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable, merely the symptoms can be treated.
 
 Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. Recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
@@ -74,16 +79,46 @@ The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation ru
 
 Seantis GmbH is a Swiss company that develops data driven web applications for medical research, pubic administration and aviation. \cite{seantis_about} For their customer SCQM they want to automate the bone erosion assessment. They already have a working algorithm, which detects the body part shown in the x-ray image. A second algorithm detects the joints in the image and extracts them as single images. These images are then used together with the bone erosion scores to train our model.
 
-\newpage
-
-Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche • Stand der Technik: Bisherige Lösungen des Problems und deren Grenzen • (Nennt kurz den Industriepartner und/oder weitere Kooperationspartner und dessen/deren Interesse am Thema Fragestellung) 
-
-Formuliert das Ziel der Arbeit • Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang • (Pflichtenheft, Spezifikation) • (Spezifiziert die Anforderungen an das Resultat der Arbeit) • (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor) • (Angaben zum Zielpublikum: nennt das für die Arbeit vorausgesetzte Wissen) • (Terminologie: Definiert die in der Arbeit verwendeten Begriffe) 
+% Stand der Technik: Bisherige Lösungen des Problems und deren Grenzen 
+% (Nennt kurz den Industriepartner und/oder weitere Kooperationspartner und dessen/deren Interesse am Thema Fragestellung) 
 
 \subsection{Related literature}
 
+% Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche
+
+% Kaggle Diabetic Retinopathy Detection
+
+
+
+\subsection{Aim and scope of this thesis}
+
+The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated and use a time series of images to predict the course of the disease.
+
+The work is based on images of the left hand only. 
+
+
+% Formuliert das Ziel der Arbeit
+% Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang
+% (Pflichtenheft, Spezifikation) 
+% (Spezifiziert die Anforderungen an das Resultat der Arbeit)
+% (Angaben zum Zielpublikum: nennt das für die Arbeit vorausgesetzte Wissen) 
+% (Terminologie: Definiert die in der Arbeit verwendeten Begriffe) 
+
+\subsection{Outline}
+
+\autoref{sec:theory} provides...
+
+\noindent\autoref{sec:methods} describes..
+
+% (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor)
+
+\newpage
+
+
+
 
 \section{Theory}
+\label{sec:theory}
 
 \subsection{Convolutional neural networks}
 \label{subsec:cnn}
@@ -93,9 +128,14 @@ Convolutional neural networks take an image as an input. The image then gets pas
 \label{subsec:rau}
 
 \section{Methods}
+\label{sec:methods}
 
 
 \section{Predicting Rau scores}
+
+% varying exposure
+
+% imbalanced data
 
 
 
