@@ -10,7 +10,7 @@
 % for urls
 \usepackage{url}
 % for references
-\usepackage{biblatex}
+\usepackage[sorting=none]{biblatex}
 \addbibresource{references.bib}
 % for multiple images
 \usepackage{subfig}
@@ -85,6 +85,14 @@ Seantis GmbH is a Swiss company that develops data driven web applications for m
 \subsection{Related literature}
 
 % Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche
+
+There are several applications where convolutional neural networks are used in medical research.
+
+A recent paper from Tajbakhsh et al. \cite{tajbakhsh_2017} investigated whether fine-tuning a pre-trained CNN is better than training a CNN from scratch when applied to medical images. They find that pre-trained networks with fine-tuning always outperformed or at least performed as well as CNNs trained from scratch. They further recommend a layer-wise fine tuning which seems to outperform shallow and deep tuning.
+
+A report from Chen \cite{chen_2016} uses convolutional neural networks on x-ray images of hands to predict the developmental bone age. He achieves a top one and two accuracy of 46 \% and 70 \% respectively. This result is close to previously used methods which use manual segmentation and handcrafted features.
+
+
 
 % Kaggle Diabetic Retinopathy Detection
 
