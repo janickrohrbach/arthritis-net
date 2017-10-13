@@ -55,9 +55,11 @@ Abstract goes here
 \newpage
 
 \section*{Acknowledgements}
-I want to thank...
+I would like to express my sincere thanks to my supervisors Beate Sick and Oliver Dürr who provided me with guidance and support during the writing of this thesis. 
 
-A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
+I would also like to thank Fabian Reinhard and Tobias Reinhard (Seantis GmbH) for their valuable inputs. 
+
+Further, I want to acknowledge the SCQM foundation which made this thesis possible through their immense dataset. A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
 
 \newpage
 
@@ -90,7 +92,11 @@ There are several applications where convolutional neural networks are used in m
 
 A recent paper from Tajbakhsh et al. \cite{tajbakhsh_2017} investigated whether fine-tuning a pre-trained CNN is better than training a CNN from scratch when applied to medical images. They find that pre-trained networks with fine-tuning always outperformed or at least performed as well as CNNs trained from scratch. They further recommend a layer-wise fine tuning which seems to outperform shallow and deep tuning.
 
-A report from Chen \cite{chen_2016} uses convolutional neural networks on x-ray images of hands to predict the developmental bone age. He achieves a top one and two accuracy of 46 \% and 70 \% respectively. This result is close to previously used methods which use manual segmentation and handcrafted features.
+A study by Paul et al. \cite{paul_2017} tried to classify osteoporosis by considering x-ray images of the bone. This task proved to be very difficult as the x-ray images from healthy patients look very similar to the ones of patients with the disease. By using a transfer learning approach they achieved a validation accuracy of 44.82 \%.
+
+Zhou et al. \cite{zhou_2002} used a two-level ensemble of neural networks to identify lung cancer cells on x-ray images of the chest. The first-level ensemble classifies whether a cell is a cancer cell or not by using full voting. The second-level ensemble is used only on cells classified by the first-level as cancer cells. It differentiates between different cancer classes as well as a non-cancer class. This ensemble works with plurality voting. The authors state that this method achieves a high accuracy and a low rate of false negatives.
+
+A report from Chen \cite{chen_2016} showed the application of convolutional neural networks on x-ray images of hands to predict the developmental bone age. He achieves a top one and two accuracy of 46 \% and 70 \% respectively. This result is close to previously used methods which use manual segmentation and handcrafted features.
 
 
 
@@ -102,15 +108,11 @@ A report from Chen \cite{chen_2016} uses convolutional neural networks on x-ray 
 
 The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated and use a time series of images to predict the course of the disease.
 
-The work is based on images of the left hand only. 
+The work is based on images of the left hand only. There exist also images of right hands as well as left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. We assume that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
 
 
 % Formuliert das Ziel der Arbeit
 % Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang
-% (Pflichtenheft, Spezifikation) 
-% (Spezifiziert die Anforderungen an das Resultat der Arbeit)
-% (Angaben zum Zielpublikum: nennt das für die Arbeit vorausgesetzte Wissen) 
-% (Terminologie: Definiert die in der Arbeit verwendeten Begriffe) 
 
 \subsection{Outline}
 
