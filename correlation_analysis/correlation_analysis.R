@@ -1,0 +1,45 @@
+rau <- read.csv(file = "~/Desktop/dl_project_1/correlation_analysis/merged.csv")
+clinical <- read.csv(file = "~/Desktop/dl_project_1/correlation_analysis/clinical_scores.csv")
+
+df <- merge(x = clinical, y = rau,
+            by.x = c("patient_id", "date"),
+            by.y = c("patient_id", "date_x"))
+
+plot(x = df$rau_score, y = df$das28bsr_score,
+     main = "Correlation between Rau score & DAS 28 BSR",
+     xlab = "Rau score", ylab = "DAS 28 BSR",
+     col = rgb(0, 0, 1,alpha = 0.1))
+
+abline(reg = lm(df$das28bsr_score ~ df$rau_score), col = "red")
+
+
+plot(x = df$rau_score, y = df$das283crp_score,
+     main = "Correlation between Rau score & DAS 28 CRP",
+     xlab = "Rau score", ylab = "DAS 28 CRP",
+     col = rgb(0, 0, 1,alpha = 0.1))
+
+abline(reg = lm(df$das283crp_score ~ df$rau_score), col = "red")
+
+
+plot(x = df$rau_score, y = df$physician_global_disease_activity,
+     main = "Correlation between Rau score & VAS physician",
+     xlab = "Rau score", ylab = "Physician global disease activity",
+     col = rgb(0, 0, 1,alpha = 0.1))
+
+abline(reg = lm(df$physician_global_disease_activity ~ df$rau_score), col = "red")
+
+
+plot(x = df$rau_score, y = df$global_patient_estimate_disease_activity,
+     main = "Correlation between Rau score & VAS patient",
+     xlab = "Rau score", ylab = "Global patient estimate disease activity",
+     col = "blue")
+
+
+
+plot(x = df$das28bsr_score, y = df$physician_global_disease_activity,
+     main = "Correlation between DAS 28 BSR score & VAS physician",
+     xlab = "Rau score", ylab = "Physician global disease activity",
+     col = rgb(0, 0, 1,alpha = 0.1))
+
+abline(reg = lm(df$physician_global_disease_activity ~ df$das28bsr_score), col = "red")
+
