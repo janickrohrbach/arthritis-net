@@ -10,8 +10,12 @@
 % for urls
 \usepackage{url}
 % for references
-\usepackage{biblatex}
+\usepackage[sorting=none]{biblatex}
 \addbibresource{references.bib}
+% for multiple images
+\usepackage{subfig}
+% for automatic reference prefix
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -25,8 +29,9 @@ Deep learning classification of rheumatoid arthritis\\
   \textbf{Author:} & Janick Rohrbach \\
   \textbf{Supervisor:} & Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
   \textbf{Industrial Partner:} & Seantis GmbH \\
-  \textbf{External Supervisor:} & Fabian Reinhard \\ & Tobias Reinhard \\
-  \textbf{Date:} & December 12, 2017
+  \textbf{External Supervisor:} & Fabian Reinhard \\ & Dr. Tobias Reinhard \\
+  \textbf{Date:} & December 12, 2017 \\
+  \hspace{6.0cm} & \hspace{6.0cm}
 \end{tabular}}
 \date{}
 \maketitle
@@ -50,7 +55,11 @@ Abstract goes here
 \newpage
 
 \section*{Acknowledgements}
-I want to thank...
+I would like to express my sincere thanks to my supervisors Beate Sick and Oliver Dürr who provided me with guidance and support during the writing of this thesis. 
+
+I would also like to thank Fabian Reinhard and Tobias Reinhard (Seantis GmbH) for their valuable inputs. 
+
+Further, I want to acknowledge the SCQM foundation which made this thesis possible through their immense dataset. A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
 
 \newpage
 
@@ -59,15 +68,67 @@ I want to thank...
 \newpage
 
 \section{Introduction}
-Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche • Stand der Technik: Bisherige Lösungen des Problems und deren Grenzen • (Nennt kurz den Industriepartner und/oder weitere Kooperationspartner und dessen/deren Interesse am Thema Fragestellung) 
 
-Formuliert das Ziel der Arbeit • Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang • (Pflichtenheft, Spezifikation) • (Spezifiziert die Anforderungen an das Resultat der Arbeit) • (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor) • (Angaben zum Zielpublikum: nennt das für die Arbeit vorausgesetzte Wissen) • (Terminologie: Definiert die in der Arbeit verwendeten Begriffe) 
+This thesis shows a method for the automated scoring of x-ray images of patients with rheumatoid arthritis. 
 
-\section{Chapter Two Title}
-\subsection{Rheumatoid arthritis}
-\label{subsec:rheuma}
+\subsection{Background}
 
-Rheumatoid arthritis is caused by a malfunctioning immune system. The immune attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the joint can occur, if the inflammation lasts for a long time. \cite{rheuma}
+Rheumatoid arthritis is caused by a malfunctioning immune system. It is therefore a type of autoimmune diseases. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable, merely the symptoms can be treated.
+
+Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. Recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
+
+The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation runs a national registry of inflammatory rheumatic diseases. \cite{scqm_about} They have collected anonymized patient data for over 10 years and provide us with x-ray images for this analysis.
+
+Seantis GmbH is a Swiss company that develops data driven web applications for medical research, pubic administration and aviation. \cite{seantis_about} For their customer SCQM they want to automate the bone erosion assessment. They already have a working algorithm, which detects the body part shown in the x-ray image. A second algorithm detects the joints in the image and extracts them as single images. These images are then used together with the bone erosion scores to train our model.
+
+% Stand der Technik: Bisherige Lösungen des Problems und deren Grenzen 
+% (Nennt kurz den Industriepartner und/oder weitere Kooperationspartner und dessen/deren Interesse am Thema Fragestellung) 
+
+\subsection{Related literature}
+
+% Nennt bestehende Arbeiten/Literatur zum Thema Literaturrecherche
+
+There are several applications where convolutional neural networks are used in medical research.
+
+A recent paper from Tajbakhsh et al. \cite{tajbakhsh_2017} investigated whether fine-tuning a pre-trained CNN is better than training a CNN from scratch when applied to medical images. They find that pre-trained networks with fine-tuning always outperformed or at least performed as well as CNNs trained from scratch. They further recommend a layer-wise fine tuning which seems to outperform shallow and deep tuning.
+
+A study by Paul et al. \cite{paul_2017} tried to classify osteoporosis by considering x-ray images of the bone. This task proved to be very difficult as the x-ray images from healthy patients look very similar to the ones of patients with the disease. By using a transfer learning approach they achieved a validation accuracy of 44.82 \%.
+
+Zhou et al. \cite{zhou_2002} used a two-level ensemble of neural networks to identify lung cancer cells on x-ray images of the chest. The first-level ensemble classifies whether a cell is a cancer cell or not by using full voting. The second-level ensemble is used only on cells classified by the first-level as cancer cells. It differentiates between different cancer classes as well as a non-cancer class. This ensemble works with plurality voting. The authors state that this method achieves a high accuracy and a low rate of false negatives.
+
+A report from Chen \cite{chen_2016} showed the application of convolutional neural networks on x-ray images of hands to predict the developmental bone age. He achieves a top one and two accuracy of 46 \% and 70 \% respectively. This result is close to previously used methods which use manual segmentation and handcrafted features.
+
+
+
+% Kaggle Diabetic Retinopathy Detection
+
+
+
+\subsection{Aim and scope of this thesis}
+
+The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated and use a time series of images to predict the course of the disease.
+
+The work is based on images of the left hand only. There exist also images of right hands as well as left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. We assume that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
+
+
+% Formuliert das Ziel der Arbeit
+% Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang
+
+\subsection{Outline}
+
+\autoref{sec:theory} provides...
+
+\noindent\autoref{sec:methods} describes..
+
+% (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor)
+
+\newpage
+
+
+
+
+\section{Theory}
+\label{sec:theory}
 
 \subsection{Convolutional neural networks}
 \label{subsec:cnn}
@@ -76,26 +137,33 @@ Convolutional neural networks take an image as an input. The image then gets pas
 \subsection{Rau classification}
 \label{subsec:rau}
 
+\section{Methods}
+\label{sec:methods}
+
+
+\section{Predicting Rau scores}
+
+% varying exposure
+
+% imbalanced data
+
+
+
 \begin{figure}
-\includegraphics[width=10cm]{labels}	
+\includegraphics[width=10cm]{joints}	
 \caption{Proximal interphalangeal joints (PIP) and carpometacarpal joints (MCP).}
-\floatfoot{Image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
-\label{fig:labels}
+\floatfoot{Original image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
+\label{fig:joints}
 \end{figure}
 
 
+\section{Results}
 
-\section{Chapter Three Title}
 
-
-\section{Chapter Four Title}
+\section{Discussion}
 
 
 \section{Conclusion}
-
-
-
-
 
 
 
