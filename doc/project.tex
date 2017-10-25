@@ -122,20 +122,32 @@ The work is based on images of the left hand only. There exist also images of ri
 
 % (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor)
 
+
 \newpage
-
-
-
 
 \section{Theory}
 \label{sec:theory}
+
+\subsection{Bone erosion score}
+\label{subsec:bone_erosion}
+
+\autoref{fig:joints} shows a sample x-ray image of two hands similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints per hand are shown with blue bounding boxes. A trained rheumatologist has scored each of those 10 joints per hand.
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{joints}	
+\caption{Proximal interphalangeal (PIP) joints and carpometacarpal  (MCP) joints.}
+\floatfoot{Original image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
+\label{fig:joints}
+\end{figure}
+
+
+
 
 \subsection{Convolutional neural networks}
 \label{subsec:cnn}
 Convolutional neural networks take an image as an input. The image then gets passed through several convolutional layers. These layers work as filters and detect different features in the image. The weights of these layers are combined to class scores. Andrey Karpathy provides a good overview over convolutional neural networks in his course notes for the Stanford class CS231n. \cite{cnn}
 
-\subsection{Rau classification}
-\label{subsec:rau}
+
 
 \section{Methods}
 \label{sec:methods}
@@ -143,19 +155,29 @@ Convolutional neural networks take an image as an input. The image then gets pas
 
 \section{Predicting Rau scores}
 
+\subsection{Pre-processing}
+
+The pre-processing step formats the images into a suitable format that can be used as an input for the CNN. 
+
+The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{imbalance}	
+\caption{Distribution of the Rau scores}
+\label{fig:imbalance}
+\end{figure}
+
+The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
+
+
+
+
+
+
+
 % varying exposure
 
 % imbalanced data
-
-
-
-\begin{figure}
-\includegraphics[width=10cm]{joints}	
-\caption{Proximal interphalangeal joints (PIP) and carpometacarpal joints (MCP).}
-\floatfoot{Original image by Nevit Dilmen (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:Medical\_X\-Ray\_imaging\_OPC06\_nevit.jpg}}
-\label{fig:joints}
-\end{figure}
-
 
 \section{Results}
 
