@@ -191,15 +191,25 @@ The images of the joints have varying exposure. Some images are very dark while 
 
 The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
 
+\subsection{Classification}
 
+\subsubsection{CNN architecture}
 
+Convolution\\
+BatchNorm\\
+Relu\\
+Convolution\\
+BatchNorm\\
+Relu\\
+MaxPooling\\
 
+6x
 
+2 Dense layers
 
+Output layer Softmax
 
-% varying exposure
-
-% imbalanced data
+\subsection{Regression}
 
 \section{Results}
 
