@@ -23,14 +23,14 @@
 \vspace{-2.0cm}
 \includegraphics{zhaw}\\ 
 \vspace{3cm}
-Deep learning classification of rheumatoid arthritis\\
+Automated scoring of bone erosion for rheumatoid arthritis with deep neural networks\\
 {\Large Zurich University of Applied Sciences}}
 \author{\begin{tabular}{rl}
   \textbf{Author:} & Janick Rohrbach \\
   \textbf{Supervisor:} & Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
   \textbf{Industrial Partner:} & Seantis GmbH \\
   \textbf{External Supervisor:} & Fabian Reinhard \\ & Dr. Tobias Reinhard \\
-  \textbf{Date:} & December 12, 2017 \\
+  \textbf{Date:} & December 22, 2017 \\
   \hspace{6.0cm} & \hspace{6.0cm}
 \end{tabular}}
 \date{}
@@ -45,7 +45,7 @@ The student declares that all sources in the text (including Internet pages) and
 \\
 Any misconduct will be dealt with according to paragraphs 39 and 40 of the General Academic Regulations for Bachelor’s and Master’s Degree courses at the Zurich University of Applied Sciences (Rahmenprüfungsordnung ZHAW (RPO)) and subject to the provisions for disciplinary action stipulated in the University regulations.\\
 \vspace{3cm} \\
-City, Date: \hspace{5cm} Signature:
+Zurich, December 22, 2017 \hspace{5cm} Janick Rohrbach
 
 \newpage
 
@@ -59,7 +59,7 @@ I would like to express my sincere thanks to my supervisors Beate Sick and Olive
 
 I would also like to thank Fabian Reinhard and Tobias Reinhard (Seantis GmbH) for their valuable inputs. 
 
-Further, I want to acknowledge the SCQM foundation which made this thesis possible through their immense dataset. A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
+Further, I want to acknowledge the SCQM foundation which made this thesis possible by providing the comprehensive dataset. A list of rheumatology offices and hospitals that are contributing to the SCQM registries can be found on www.scqm.ch/institutions. The SCQM is financially supported by pharmaceutical industries and donors. A list of financial supporters can be found on www.scqm.ch/sponsors.
 
 \newpage
 
@@ -75,7 +75,7 @@ This thesis shows a method for the automated scoring of x-ray images of patients
 
 Rheumatoid arthritis is caused by a malfunctioning immune system. It is therefore a type of autoimmune diseases. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable, merely the symptoms can be treated.
 
-Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. Recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
+Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. This thesis shows, how recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
 
 The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation runs a national registry of inflammatory rheumatic diseases. \cite{scqm_about} They have collected anonymized patient data for over 10 years and provide us with x-ray images for this analysis.
 
@@ -97,6 +97,8 @@ A study by Paul et al. \cite{paul_2017} tried to classify osteoporosis by consid
 Zhou et al. \cite{zhou_2002} used a two-level ensemble of neural networks to identify lung cancer cells on x-ray images of the chest. The first-level ensemble classifies whether a cell is a cancer cell or not by using full voting. The second-level ensemble is used only on cells classified by the first-level as cancer cells. It differentiates between different cancer classes as well as a non-cancer class. This ensemble works with plurality voting. The authors state that this method achieves a high accuracy and a low rate of false negatives.
 
 A report from Chen \cite{chen_2016} showed the application of convolutional neural networks on x-ray images of hands to predict the developmental bone age. He achieves a top one and two accuracy of 46 \% and 70 \% respectively. This result is close to previously used methods which use manual segmentation and handcrafted features.
+
+In a degree project Hensman and Masko \cite{hensman_2015} looked at the impact of imbalanced training data for CNNs. They find, that heavy imbalances have a strong impact on the performance and suggest oversampling of minority classes to improve the performance of the network.
 
 
 
@@ -174,6 +176,7 @@ Convolutional neural networks take an image as an input. The image then gets pas
 \section{Methods}
 \label{sec:methods}
 
+Keras % reference
 
 \section{Predicting Rau scores}
 
@@ -191,7 +194,6 @@ The images of the joints have varying exposure. Some images are very dark while 
 
 The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
 
-\subsection{Classification}
 
 \subsubsection{CNN architecture}
 
@@ -209,7 +211,13 @@ MaxPooling\\
 
 Output layer Softmax
 
+\subsection{Classification}
+
+
+
 \subsection{Regression}
+
+
 
 \section{Results}
 
