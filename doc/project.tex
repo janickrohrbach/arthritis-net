@@ -16,6 +16,8 @@
 \usepackage{subfig}
 % for automatic reference prefix
 \usepackage{hyperref}
+% for good looking tables
+\usepackage{booktabs}
 
 \begin{document}
 
@@ -73,11 +75,11 @@ This thesis shows a method for the automated scoring of x-ray images of patients
 
 \subsection{Background}
 
-Rheumatoid arthritis is caused by a malfunctioning immune system. It is therefore a type of autoimmune diseases. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable, merely the symptoms can be treated.
+Rheumatoid arthritis is an autoimmune disease. Which means that the disease is caused by a malfunctioning immune system. The immune system attacks healthy tissue instead of bacteria and viruses. This causes inflammation in the joints. Irreversible damage to the bone in the joint can occur, if the inflammation lasts for a long time. \cite{rheuma} Rheumatoid arthritis is incurable, merely the symptoms can be treated.
 
-Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. This thesis shows, how recent advances in computer vision make it possible to automate this task. This leads to time savings which in return helps the rheumatologist to spend more time with the patient.
+Today, the severity of the bone erosion is assessed by a trained rheumatologist by using x-ray images of hand and feet. This process takes several minutes per patient. This thesis shows, how recent advances in computer vision make it possible to automate this task. This leads to time savings which in return help the rheumatologist to spend more time with the patient.
 
-The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation runs a national registry of inflammatory rheumatic diseases. \cite{scqm_about} They have collected anonymized patient data for over 10 years and provide us with x-ray images for this analysis.
+The Swiss Clinical Quality Management in Rheumatic Diseases (SCQM) Foundation runs a national registry of inflammatory rheumatic diseases. \cite{scqm_about} They have collected anonymized patient data for over 10 years and provide the x-ray images used for this analysis.
 
 Seantis GmbH is a Swiss company that develops data driven web applications for medical research, pubic administration and aviation. \cite{seantis_about} For their customer SCQM they want to automate the bone erosion assessment. They already have a working algorithm, which detects the body part shown in the x-ray image. A second algorithm detects the joints in the image and extracts them as single images. These images are then used together with the bone erosion scores to train our model.
 
@@ -110,11 +112,7 @@ In a degree project Hensman and Masko \cite{hensman_2015} looked at the impact o
 
 The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated and use a time series of images to predict the course of the disease.
 
-The work is based on images of the left hand only. There exist also images of right hands as well as left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. We assume that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
-
-
-% Formuliert das Ziel der Arbeit
-% Verweist auf die offizielle Aufgabenstellung des/der Dozierenden im Anhang
+The work is based on images of the left hand only. There also exist images of right hands as well as images of left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. We assume that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
 
 \subsection{Outline}
 
@@ -130,10 +128,10 @@ The work is based on images of the left hand only. There exist also images of ri
 \section{Theory}
 \label{sec:theory}
 
-\subsection{Bone erosion scores}
-\label{subsec:bone_erosion}
+\subsection{Finger joints}
+\label{subsec:joints}
 
-\autoref{fig:joints} shows a sample x-ray image of two hands similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints per hand are shown with blue bounding boxes. A trained rheumatologist has scored each of those 10 joints per hand.
+\autoref{fig:joints} shows a sample x-ray image of two hands similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints per hand are shown with blue bounding boxes. These are the joints, that are assessed with a score. Usually, the wrist joint is also scored but we limited our analysis to the five PIP joints and the 5 MCP joints.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{joints}	
@@ -142,35 +140,32 @@ The work is based on images of the left hand only. There exist also images of ri
 \label{fig:joints}
 \end{figure}
 
+\subsection{Ratingen-score}
+\label{subsec:ratingen}
 
-\subsubsection{Ratingen score}
-\label{subsubsec:ratingen}
+The most important criteria for the effectiveness of a treatment is the influence on the radiological progression. To quantify the irreversible bone erosion in the joint, several scoring methods were developed. The score used in this thesis is called Ratingen-score, it estimates the percentage of eroded joint surface. \cite{rau_2007} 
 
-% hier fehlt noch quelle für tabelle plus text dazu. DOI
-%https://doi.org/10.1007/978-3-7985-1721-9_2
- %Publisher Name
-%Steinkopff
- %Print ISBN
-%978-3-7985-1720-2
-%Online ISBN
-%978-3-7985-1721-9
-
-\begin{tabular}{ l c l }
-  Stadium 0 & = & normal joint \\
-  Stadium 1 & = & one or more erosions, less than 20 \% of the joint surface is eroded \\
-  Stadium 2 & = & 21 \% - 40 \% of the joint surface is eroded \\
-  Stadium 3 & = & 41 \% - 60 \% of the joint surface is eroded \\
-  Stadium 4 & = & 61 \% - 80 \% of the joint surface is eroded \\
-  Stadium 5 & = & more than 80 \% of the joint surface is eroded \\
+\begin{table}[ht]
+\centering
+\caption{Disease stages of Ratingen-score \cite{rau_2007} }
+\label{tab:ratingen}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Stage & Description                                                          \\ \midrule
+0     & Normal joint                                                         \\
+1     & One or more erosions, less than 20 \% of the joint surface is eroded \\
+2     & 21 \% - 40 \% of the joint surface is eroded                         \\
+3     & 41 \% - 60 \% of the joint surface is eroded                         \\
+4     & 61 \% - 80 \% of the joint surface is eroded                         \\
+5     & More than 80 \% of the joint surface is eroded                       \\ \bottomrule
 \end{tabular}
+\end{table}
 
-
-
+The labels of our data lie within 0 and 100 and correspond to the percentage of joint surface erosion. The values can easily be converted to Ratingen-Scores.
 
 \subsection{Convolutional neural networks}
 \label{subsec:cnn}
 Convolutional neural networks take an image as an input. The image then gets passed through several convolutional layers. These layers work as filters and detect different features in the image. The weights of these layers are combined to class scores. Andrey Karpathy provides a good overview over convolutional neural networks in his course notes for the Stanford class CS231n. \cite{cnn}
-
 
 
 \section{Methods}
