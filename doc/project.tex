@@ -205,14 +205,15 @@ The pre-processing step formats the images into a suitable format that can be us
 
 The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
 
+The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (70 \% of the data). It was split such that all images of the same person are in the same set.
+
+The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
+
 \begin{figure}[ht]
 \includegraphics[width=10cm]{imbalance}	
 \caption{Distribution of the Rau scores}
 \label{fig:imbalance}
 \end{figure}
-
-The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
-
 
 \subsection{Modeling}
 
