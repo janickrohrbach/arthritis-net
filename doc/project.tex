@@ -160,7 +160,7 @@ Stage & Description                                                          \\ 
 \label{subsec:ann}
 This section offers a very brief introduction to artificial neural networks. A more in-depth explanation can be found in Andrey Karpathy's course notes for the Stanford class CS231n. \cite{karpathy}
 
-The structure of an Artificial neural network (ANN) is inspired by the human brain. It consists of approximately 100 billion neurons which form an interconnected network. The neurons can communicate with each other by transmitting electrical potential. If the potential in a neuron reaches a certain threshold, it fires and transmits the potential to connected neurons. \cite{kruse_2016}
+The structure of an Artificial neural network (ANN) is inspired by the human brain. A brain consists of approximately 100 billion neurons which form an interconnected network. The neurons can communicate with each other by transmitting electrical potential. If the potential in a neuron reaches a certain threshold, it fires and transmits the potential to connected neurons. \cite{kruse_2016}
 
 An ANN is a very simplified model of this biological process. A single neuron can be described by following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron. The activation function used in this thesis is the rectified linear unit (ReLU) which is calculated as follows: $f(x)=max(0,x)$
 
@@ -216,6 +216,8 @@ The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{
 \end{figure}
 
 \subsection{Modeling}
+
+The model used is inspired by the VGG16 net. It consists of 6 blocks of two convolutional layers of the size 3x3 followed by a max pooling layer. The number of filters per convolutional layer is increasing with every block. Every convolutional layer uses batch normalization before the Relu activation function.
 
 Convolution\\
 BatchNorm\\
