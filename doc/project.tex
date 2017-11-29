@@ -20,6 +20,10 @@
 \usepackage{cleveref}
 % for good looking tables
 \usepackage{booktabs}
+% for lists with a), b), c)
+\usepackage{enumitem}
+% for equations with multicases
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -73,7 +77,7 @@ Further, I want to acknowledge the SCQM foundation which made this thesis possib
 
 \section{Introduction}
 
-This thesis shows a method for the automated scoring of x-ray images of patients with rheumatoid arthritis. 
+This thesis shows a method for the automated scoring of x-ray images of patients with rheumatoid arthritis.
 
 \subsection{Background}
 
@@ -112,7 +116,7 @@ The work is based on images of the left hand only. There also exist images of ri
 
 \subsection{Outline}
 
-\Cref{sec:theory} describes how the joints in the hand are scored and introduces artificial neural networks (ANNs) and the subcategory convolutional neural networks (CNNs). In \autoref{sec:methods} the steps from data preparation to predicting the scores are shown. \autoref{sec:results} presents the results of the predictions which are then discussed in \autoref{sec:discussion}. Finally \autoref{sec:conclusion} concludes this thesis
+\Cref{sec:theory} describes how the joints in the hand are scored and introduces artificial neural networks (ANNs) and the subcategory convolutional neural networks (CNNs). In \autoref{sec:methods} the steps from data preparation to predicting the scores are shown. \Cref{sec:results} presents the results of the predictions which are then discussed in \autoref{sec:discussion}. Finally \autoref{sec:conclusion} concludes this thesis
 
 % (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor)
 
@@ -125,7 +129,7 @@ The work is based on images of the left hand only. There also exist images of ri
 \subsection{Finger joints}
 \label{subsec:joints}
 
-\autoref{fig:joints} shows an x-ray image of two hands similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints per hand are shown with blue bounding boxes. These are the joints, that are assessed with a score. Usually, the wrist joint is also scored but we limited our analysis to the five PIP joints and the 5 MCP joints.
+\autoref{fig:joints} shows an x-ray image of a left hand similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints are shown with blue bounding boxes. These are the joints, that are most affected by rheumatoid arthritis. The wrist joint is also affected, but we limited our analysis to the five PIP joints and the 5 MCP joints. Each of these joints is assessed with a score by a trained rheumatologist or radiologist. The scoring method is described in the next section.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{joints}	
@@ -162,13 +166,13 @@ This section offers a very brief introduction to artificial neural networks. A m
 
 The structure of an Artificial neural network (ANN) is inspired by the human brain. A brain consists of approximately 100 billion neurons which form an interconnected network. The neurons can communicate with each other by transmitting electrical potential. If the potential in a neuron reaches a certain threshold, it fires and transmits the potential to connected neurons. \cite{kruse_2016}
 
-An ANN is a very simplified model of this biological process. A single neuron can be described by following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron. The activation function used in this thesis is the rectified linear unit (ReLU) which is calculated as follows: $f(x)=max(0,x)$
+An ANN is a very simplified model of this biological process. A single neuron can be described by following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron.
 
 These single neurons can then be combined to networks. The most simple network is the feed forward neural network described in the following section.
 
-\subsubsection{Feed forward neural networks}
-\label{subsubsec:ffnn}
-A feed forward neural network (FFNN) has an input layer, arbitrarily many hidden layers and one output layer. The neurons of each layer are connected to every neuron of the next layer. It is called feed forward because data  can only flow in one direction and there are no feedback loops. \autoref{fig:ffnn} shows a possible structure for an FFNN.
+\subsection{Feed forward neural networks}
+\label{subsec:ffnn}
+A feed forward neural network (FFNN) has an input layer, arbitrarily many hidden layers and one output layer. The neurons of each layer are connected to every neuron of the next layer. It is called feed forward because data  can only flow in one direction and there are no feedback loops. \autoref{fig:ffnn} shows a possible structure for a FFNN.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{ffnn}	
@@ -177,13 +181,13 @@ A feed forward neural network (FFNN) has an input layer, arbitrarily many hidden
 \label{fig:ffnn}
 \end{figure}
 
-For supervised learning the weights and biases of this network can be trained by using back-propagation. The input is fed through the network with randomly initialized parameters. The output is then compared to the true values by using a loss-function. The loss is then back-propagated through the network to adjust the parameters.
+For supervised learning the weights and biases of this network can be trained by using back-propagation. The input is fed through the network with randomly initialized parameters. The output is then compared to the true values by using a loss-function. The loss is then back-propagated through the network to adjust the parameters. With every training step, this process is repeated and the loss decreases.
 
 A special type of the FFNN, used for image recognition, is the convolutional neural network, which is described in the next section.
 
-\subsubsection{Convolutional neural networks}
-\label{subsubsec:cnn}
-Convolutional neural networks (CNNs) take an image as an input. The image can be seen as a 3-dimensional matrix, where the third dimension includes the different color channels. Instead of fully connected layers, convolutional layers are used. Convolutions work as filters that detect different features in the image. These filters usually have a small size (e.g. 3x3) and are moved over the image. The parameters for this filter are always the same, it does not matter where in the image the filter is applied. \autoref{fig:cnn} shows a possible architecture of a CNN with multiple convolutional layers and a fully connected layer at the end.
+\subsection{Convolutional neural networks}
+\label{subsec:cnn}
+Convolutional neural networks (CNNs) take an image as an input. The image can be seen as a 3-dimensional matrix, where the third dimension includes the different color channels. Instead of fully connected layers, convolutional layers are used. Convolutions work as filters that detect different features in the image. These filters usually have a small size (e.g. 3x3) and are moved over the image. \autoref{fig:cnn} shows a possible architecture of a CNN with multiple convolutional layers and a fully connected layer at the end.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{cnn}	
@@ -197,43 +201,64 @@ Convolutional neural networks (CNNs) take an image as an input. The image can be
 \section{Methods}
 \label{sec:methods}
 
-Keras % reference
+This section describes the steps taken to predict the bone erosion scores. It shows a classification model which predicts the Ratingen-score and a regression model which predicts the percentage of bone erosion.
+
+\subsection{Tools and Infrastructure}
+The models were built in Python 3.5 \cite{python} with the package Tensorflow 1.4 \cite{tensorflow} using the high level API Keras \cite{keras}. For general machine learning the package Scikit-learn \cite{scikit-learn} was used. The package Matplotlib \cite{matplotlib} was used to produce figures. In addition, the programming language R \cite{r} was used for further analysis of the results and for producing figures.
+
+For the training of the models a Nvidia Titan X (Pascal) graphics card was used.
 
 \subsection{Data preparation}
+\label{subsec:data_prep}
 
 The pre-processing step formats the images into a suitable format that can be used as an input for the CNN. 
 
 The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
 
-The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (70 \% of the data). It was split such that all images of the same person are in the same set.
+The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (10 \% of the data). It was split such that all images of the same patient are in the same set.
 
-The Rau scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with scores between 0 and 25 but there are very little observations with scores higher than 25. Because the CNN minimizes the overall loss-function, it would perform bad for the underrepresented part of the data. In this case, the model would be bad in predicting high scores. In order to make the model a good predictor for all cases, we introduced ...????????????
+The original images have values between 0 and 255. We divided the data by 255 in order to have values in the range of [0,1].
+
+The bone erosion scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with little bone erosion with scores between 0 and 25. There are very little observations with scores higher than 25. Only the fully eroded joints (score = 100) seem to be a bit more frequent.
+
+When training the CNN, it minimizes the overall loss-function. For imbalanced data the CNN performs bad for the underrepresented part of the data. In this case, the model would be bad predictor for high scores. In order to make the model a good predictor for all cases, we tried weighting the loss function as well as oversampling the underrepresented classes.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{imbalance}	
-\caption{Distribution of the Rau scores}
+\caption{Histogram of the bone erosion scores}
 \label{fig:imbalance}
 \end{figure}
 
 \subsection{Modeling}
 
-The model used is inspired by the VGG16 net. It consists of 6 blocks of two convolutional layers of the size 3x3 followed by a max pooling layer. The number of filters per convolutional layer is increasing with every block. Every convolutional layer uses batch normalization before the Relu activation function.
+We decided to create a classification as well as a regression model. The architecture of both models is similar and is inspired by the VGG16 net. It consists of 6 blocks of two convolutional layers of the size 3x3 followed by a max pooling layer. The number of filters per convolutional layer is increasing with every second block, whereas the size of the layers is decreasing due to the max pooling layers. Every convolutional layer uses batch normalization before the Relu activation function.
 
-Convolution\\
-BatchNorm\\
-Relu\\
-Convolution\\
-BatchNorm\\
-Relu\\
-MaxPooling\\
-
-6x
-
-2 Dense layers
-
-Output layer Softmax
+This first part is identical for both models. We then flatten the output of the last convolution block and use two dense layers with batch normalization, ReLu activation and dropout. Only the number of neurons in the dense layers is different between the two models. The output layer however is different between the two models and described in the next two sections.
 
 \subsection{Classification}
+\label{subsec:clas}
+
+The classification model directly predicts the Ratingen-score. The output layer has 6 neurons according to the 6 Ratingen classes (0-5). The Softmax activation function is then used to predict the probabilities for each class. The architecture of this CNN is shown in \autoref{fig:cnn_cla}.
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{cnn_classification}	
+\caption{Architecture of the CNN for classification}
+\label{fig:cnn_cla}
+\end{figure}
+
+The model is trained for 25 epochs with the ADAM optimizer and a learning rate of 0.001. Categorical loss entropy is used as the loss function. The images are fed through the model in batches of 100 images at a time.
+
+As described in \autoref{subsec:data_prep} we tried different approaches to handle the imbalanced data. 
+
+\begin{enumerate}[label=(\alph*)]
+\item The first model is trained on the original data and is used as a basis to compare the results of the other models.
+\item For the second model we oversampled the underrepresented classes in order to have roughly the same number of images per class. The oversampled images are augmentations of the original data. Random rotations of up to 25 degrees, shearings of up to 0.1 radians and and zooms of up to 10 \% were used.
+\item The third model used the same data as the first model, but the loss function was weighted with class weights. The class weights where chosen such that the class weight multiplied by the number of observation in that class equals to the same value for all classes.
+\end{enumerate}
+
+Model b) was trained for the full 25 epochs, whereas the other two models started overfitting and had to be stopped early after 9 epochs.
+
+\autoref{fig:confusion} shows the normalized confusion matrices for the test dataset for the three models.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -241,10 +266,63 @@ Output layer Softmax
 \subfloat[Oversampled]{\includegraphics[width = 1.5in]{classification_oversampled}} &
 \subfloat[Weights]{\includegraphics[width = 1.5in]{classification_weights}}
 \end{tabular}
-\caption{Confusion matrixes for the predictions of the classifcation models.}
+\caption{Normalized confusion matrices for the predictions of the classifcation models.}
+\label{fig:confusion}
 \end{figure}
 
+The evaluation metrics for the three models can be seen in \autoref{tab:metrics_cla}. It turned out that the accuracy is not a suitable metric. Model a) has the highest accuracy but makes a lot of misclassifications in the under-represented classes. Whereas the accuracy of model c) is the lowest, but the accuracy for the underrepresented classes is much better.
+
+Therefore, we decided to use the class normalized accuracy as our evaluation metric. It is the mean of six class accuracies. It describes much better, whether our model is a good predictor for all classes.
+
+As a second metric, we calculated the class normalized accuracy for predictions that are in the right class or no more than one class above or below the correct class. This metric takes into account, that a misclassification by 1 is far less severe than a misclassification by 5.
+
+\begin{table}[ht]
+\centering
+\caption{Evaluation metrics for classification.}
+\label{tab:metrics_cla}
+\begin{tabular}{@{}llll@{}}
+\toprule
+                                & a)    & b)    & c)    \\ \midrule
+Accuracy                        & 0.726 & 0.73 & 0.569 \\
+Class normalized accuracy       & 0.264 & 0.337 & 0.422 \\
+Class normalized accuracy $\pm$ 1 & 0.558 & 0.675 & 0.817 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Considering the class normalized accuracies, model c) is clearly superior to the other two models. Therefore, this model was selected for the classification task.
+
 \subsection{Regression}
+\label{subsec:reg}
+
+
+For the regression model, we decided to predict the cumulative density function (cdf) instead of predicting directly the bone erosion score. This method provides a small improvement in the mean squared error (mse) compared to a model that has only one output neuron.
+
+The model is only slightly different from the classification model. The output layer has 101 neurons for the discrete bone erosion scores from 0 to 100. Since the output layer has much more neurons compared to the classification model, the number of neurons in the dense layers were also increased. The sigmoid activation function is used instead of the softmax activation function.This architecture can be seen in \autoref{fig:cnn_reg}.
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{cnn_regression}	
+\caption{Architecture of the CNN for regression}
+\label{fig:cnn_reg}
+\end{figure}
+
+To train the model, the Continuous Ranked Probability Score (CRPS) was used as the loss function. For the discrete case it is calculated as follows. \cite{crps}
+
+$$CRPS = \frac{1}{101 * N} \sum\limits_{n=1}^{N} \sum\limits_{k=0}^{101} (P(y \geq k) - H(k - R_n))^2$$
+
+Where $P$ is the predicted distribution, $N$ is the number of observations, $R$ is the actual percentage of bone erosion and $H(x) = \begin{cases}
+1 & \text{for $x \geq 0$,}\\
+0 & \text{otherwise.}
+\end{cases}$ \cite{crps}
+
+It is difficult to visualize CRPS, but the shaded area in \autoref{fig:crps} helps understanding what CRPS does. \cite{crps}
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{crps}	
+\caption{CRPS probability score}
+\label{fig:crps}
+\end{figure}
+
+This model was trained in the same ways as described in \ref{subsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -253,12 +331,53 @@ Output layer Softmax
 \subfloat[Weights]{\includegraphics[width = 1.5in]{regression_weights}}
 \end{tabular}
 \caption{Predictions of the regression models.}
+\label{fig:hexbin}
 \end{figure}
 
-\newpage
+There is no big visual difference between the three plots. We noticed that the model is not predicting very well for the badly damaged joints with true labels of 100.  
+
+?????????????
+
+
+When looking at the evaluation metrics in \autoref{tab:metrics_reg}, we can see, that model a) has a smallest mean squared error (mse) as well as the smallest mean absolute error (mae) of the three models. Therefore we decided to use model a) for regression.
+
+\begin{table}[ht]
+\centering
+\caption{Evaluation metrics for regression.}
+\label{tab:metrics_reg}
+\begin{tabular}{@{}llll@{}}
+\toprule
+                                & a)    & b)    & c)    \\ \midrule
+Mean squared error (mse)        & 80.884 & 83.017 & 94.488 \\
+Mean absolute error (mae)       & 4.046 & 4.072 & 4.057 \\
+
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Transfer learning}
+\label{subsec:tl}
+
+As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used their pre-trained weights and cut off their output layer. Instead we added two dense layers and an output layer identical to the output layers described in \ref{subsec:clas} and \ref{subsec:reg} for classification and regression respectively. Since the model is trained on color images our greyscale data was transformed to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
+
+
+!!!!!!!!!!!!!! grafik ändern zu global avg pooling !!!!!!!
+
+\begin{figure}[ht]
+\includegraphics[width=10cm]{transfer_learning}	
+\caption{Model architecture for transfer learning}
+\label{fig:transfer_learning}
+\end{figure}
+
+We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs.
+
+\subsection{Analysis of the embeddings}
+\label{subsec:embeddings}
+
+\clearpage
 \section{Results}
 \label{sec:results}
-
+...
 
 \newpage
 \section{Discussion}
