@@ -348,6 +348,7 @@ When looking at the evaluation metrics in \autoref{tab:metrics_reg}, we can see,
 \begin{tabular}{@{}llll@{}}
 \toprule
                                 & a)    & b)    & c)    \\ \midrule
+CRPS							& 0.0291 & 0.0304 & 0.0426 \\
 Mean squared error (mse)        & 80.884 & 83.017 & 94.488 \\
 Mean absolute error (mae)       & 4.046 & 4.072 & 4.057 \\
 
@@ -360,16 +361,49 @@ Mean absolute error (mae)       & 4.046 & 4.072 & 4.057 \\
 
 As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used their pre-trained weights and cut off their output layer. Instead we added two dense layers and an output layer identical to the output layers described in \ref{subsec:clas} and \ref{subsec:reg} for classification and regression respectively. Since the model is trained on color images our greyscale data was transformed to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
 
-
-!!!!!!!!!!!!!! grafik ändern zu global avg pooling !!!!!!!
-
 \begin{figure}[ht]
 \includegraphics[width=10cm]{transfer_learning}	
 \caption{Model architecture for transfer learning}
 \label{fig:transfer_learning}
 \end{figure}
 
-We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs.
+We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs. The predictions for the test set are shown in \autoref{fig:transfer_learning_results}. When comparing the confusion matrix for the classification model with Model c) in \autoref{fig:confusion} we can see that the transfer learning model has higher accuracy for the extreme cases 0, 1 and 5. However, the model seems to perform worse for the Ratingen-scores 2, 3 and 4. The regression model
+
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Classification]{\includegraphics[width = 1.5in]{transfer_learning_classification}} &
+\subfloat[Regression]{\includegraphics[width = 1.5in]{transfer_learning_regression}}
+\end{tabular}
+\caption{Predictions of the transfer learning models}
+\label{fig:transfer_learning_results}
+\end{figure}
+
+\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. When comparing the metrics to model c) in \autoref{tab:metrics_cla} and model a) in \autoref{tab:metrics_reg} we can see that the classification model has a higher class normalized accuracy but the class normalized accuracy $\pm$ 1 is worse. The transfer learning model for classification is not clearly better than the base model. The regression model however is considerably better than the base model with all evaluation metrics showing better results. 
+
+\begin{table}[ht]
+\begin{tabular}{cc}
+\begin{tabular}{@{}ll@{}}
+\toprule
+                                & Classification \\ \midrule
+Accuracy                        & 0.65           \\
+Class normalized accuracy       & 0.436          \\
+Class normalized accuracy $\pm$ 1 & 0.787          \\ \bottomrule
+\end{tabular}
+\quad
+\begin{tabular}{@{}ll@{}}
+\toprule
+        & Regression \\ \midrule
+CRPS    & 0.0274          \\
+MSE     & 72.768          \\
+MAE		& 0.653          \\ \bottomrule
+\end{tabular}
+\end{tabular}
+\caption{Evaluation metrics for the transfer learning models}
+\label{tab:transfer_learning_metrics}
+\end{table}
+
+
 
 \subsection{Analysis of the embeddings}
 \label{subsec:embeddings}
