@@ -88,10 +88,49 @@ for (i in not_ids) {
 
 points(x_2, y_2, col = "red")
 
-hist(x = unlist(m), breaks = 20, freq = FALSE, col = rgb(0,0,1,1/4))
-hist(x = unlist(m_2), breaks = 20, freq = FALSE, col = rgb(1,0,0,1/4), add = TRUE)
-abline(v = mean(y_1, na.rm = TRUE), col = "blue")
-abline(v = mean(y_2, na.rm = TRUE), col = "red")
+#hist(x = unlist(m), breaks = 20, freq = FALSE, col = rgb(0,0,1,1/4))
+#hist(x = unlist(m_2), breaks = 20, freq = FALSE, col = rgb(1,0,0,1/4), add = TRUE)
+#abline(v = mean(y_1, na.rm = TRUE), col = "blue")
+#abline(v = mean(y_2, na.rm = TRUE), col = "red")
+
+boxplot(list(unlist(m), unlist(m_2)), notch = TRUE,
+        names = c("gute", "schlechte"),
+        main = "Schlechtes Eck (alle werte)")
+
+plot(x = density(x = unlist(m), na.rm = TRUE), col = "blue",
+     main = "schlechtes Eck (alle werte)", ylim = c(0, 0.6), xlab = c(0,100))
+lines(density(x = unlist(m_2), na.rm = TRUE), col = "red")
+legend("topright",
+       legend = c("gute", "schlechte"),
+       fill = c("blue", "red"))
+
+m_mean <- rep(NA, length(m))
+
+for (i in 1:length(m)) {
+  m_mean[i] <- mean(m[[i]])
+}
+
+m2_mean <- rep(NA, length(m_2))
+
+for (i in 1:length(m_2)) {
+  m2_mean[i] <- mean(m_2[[i]])
+}
+
+boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
+        names = c("gute", "schlechte"),
+        main = "Schlechtes eck (mean)")
+
+plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
+     main = "schlechtes Eck (alle werte)", ylim = c(0, 0.2), xlab = c(0,100))
+lines(density(x = m2_mean, na.rm = TRUE), col = "red")
+legend("topright",
+       legend = c("gute", "schlechte"),
+       fill = c("blue", "red"))
+
+# H_0: Beide Mittelwerte sind gliech
+# p-wert: 2.1 x 10^-14
+# H_0 kann verworfen werden
+t.test(x = m_mean, y = m2_mean, paired = FALSE)
 
 # Umgekehrt -----------------------
 
@@ -167,7 +206,46 @@ for (i in not_ids) {
 
 points(x_2[1:161], y_2[1:161], col = "red")
 
-hist(x = unlist(m), breaks = 20, freq = FALSE, col = rgb(0,0,1,1/4))
-hist(x = unlist(m_2), breaks = 20, freq = FALSE, col = rgb(1,0,0,1/4), add = TRUE)
-abline(v = mean(y_1, na.rm = TRUE), col = "blue")
-abline(v = mean(y_2, na.rm = TRUE), col = "red")
+#hist(x = unlist(m), breaks = 20, freq = FALSE, col = rgb(0,0,1,1/4))
+#hist(x = unlist(m_2), breaks = 20, freq = FALSE, col = rgb(1,0,0,1/4), add = TRUE)
+#abline(v = mean(y_1, na.rm = TRUE), col = "blue")
+#abline(v = mean(y_2, na.rm = TRUE), col = "red")
+
+boxplot(list(unlist(m), unlist(m_2)), notch = TRUE,
+        names = c("schlechte", "gute"),
+        main = "Gutes Eck (alle werte)")
+
+plot(x = density(x = unlist(m), na.rm = TRUE), col = "blue",
+     main = "gutes Eck (alle werte)", ylim = c(0, 0.6), xlab = c(0,100))
+lines(density(x = unlist(m_2), na.rm = TRUE), col = "red")
+legend("topright",
+       legend = c("schlechte", "gute"),
+       fill = c("blue", "red"))
+
+m_mean <- rep(NA, length(m))
+
+for (i in 1:length(m)) {
+  m_mean[i] <- mean(m[[i]])
+}
+
+m2_mean <- rep(NA, length(m_2))
+
+for (i in 1:length(m_2)) {
+  m2_mean[i] <- mean(m_2[[i]])
+}
+
+boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
+        names = c("schlechte", "gute"),
+        main = "Gutes eck (mean)")
+
+plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
+     main = "gutes Eck (alle werte)", ylim = c(0, 0.2), xlab = c(0,100))
+lines(density(x = m2_mean, na.rm = TRUE), col = "red")
+legend("topright",
+       legend = c("schlechte", "gute"),
+       fill = c("blue", "red"))
+
+# H_0: Beide Mittelwerte sind gliech
+# p-wert: 4.9 x 10^-5
+# H_0 kann verworfen werden
+t.test(x = m_mean, y = m2_mean, paired = FALSE)
