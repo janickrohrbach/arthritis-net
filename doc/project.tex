@@ -114,13 +114,6 @@ The aim of this thesis is to predict bone erosion scores from x-ray images. We f
 
 The work is based on images of the left hand only. There also exist images of right hands as well as images of left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. It is assumed that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
 
-\subsection{Outline}
-
-\Cref{sec:theory} describes how the joints in the hand are scored and introduces artificial neural networks (ANNs) and the subcategory convolutional neural networks (CNNs). In \autoref{sec:methods} the steps from data preparation to predicting the scores are shown. \Cref{sec:results} presents the results of the predictions which are then discussed in \autoref{sec:discussion}. Finally \autoref{sec:conclusion} concludes this thesis
-
-% (Übersicht über die Arbeit: stellt die folgenden Teile der Arbeit kurz vor)
-
-
 \newpage
 
 \section{Theory}
@@ -143,6 +136,7 @@ The work is based on images of the left hand only. There also exist images of ri
 
 The most important criteria for the effectiveness of a treatment is the influence on the radiological progression. To quantify the irreversible bone erosion in the joint, several scoring methods were developed. The score used in this thesis is called Ratingen-score, it estimates the percentage of eroded joint surface. \cite{rau_2007}. The labels of our data lie within 0 and 100 and correspond to the percentage of joint surface erosion. These values can easily be converted to Ratingen-Scores according to \autoref{tab:ratingen}.
 
+
 \begin{table}[ht]
 \centering
 \caption{Disease stages of Ratingen-score \cite{rau_2007} }
@@ -159,6 +153,31 @@ Stage & Description                                                          \\ 
 \end{tabular}
 \end{table}
 
+\subsection{Rau-score}
+\label{subsec:rau}
+
+This score is an overall score, which is calculated after the Ratingen-scores for the individual joints are determined. The sum of the Ratingen-scores for all 32 joints (5 PIP, 5 MCP and 1 wrist joint per hand and 5 joints per foot) is multiplied by 38 and divided by the number of scored joints.
+
+\subsection{Disease activity score (DAS28)}
+\label{subsec:das}
+
+The disease activity score (DAS28) measures the disease activity for the following 28 joints. 5 PIP, 5 MCP and 1 wrist joint per hand plus elbow, shoulder and knee joints \cite{runmc}. The score is derived from the following four measurements.
+
+\begin{enumerate}[label=(\alph*)]
+\item $n_s =$ Number of swollen joints
+\item $n_t =$ Number of tender joints
+\item $ESR$ in mm/hr or $CRP$ in mg/L $=$ Blood markers of inflammation (either the erythrocyte sedimentation rate (ESR) or C reactive protein (CRP))
+\item $g_h$ in mm $=$ Patients global assessment of disease activity on a 100 mm long scale from very good (0 mm) to very bad (100 mm).
+\end{enumerate}
+
+The DAS28 score is then calculated as follows. \cite{runmc_formula}
+
+$$DAS28_{ESR} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.7 * \ln{(ESR)} + 0.014 * g_h$$
+
+
+$$DAS28_{CRP} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.36 * \ln{(CRP + 1)} + 0.014 * g_h + 0.96$$
+
+A DAS28 $>$ 5.1 corresponds to high disease activity, DAS28 $<$ 3.2 stands for low disease activity and a DAS28 $<$ 2.6 stands for remission. \cite{runmc_formula}
 
 \subsection{Artificial neural networks}
 \label{subsec:ann}
@@ -168,25 +187,25 @@ The structure of an Artificial neural network (ANN) is inspired by the human bra
 
 An ANN is a very simplified model of this biological process. A single neuron can be described by following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron.
 
-These single neurons can then be combined to networks. The most simple network is the feed forward neural network described in the following section.
+These single neurons can then be combined to networks. The most simple network is the fully coonected neural network described in the following section.
 
-\subsection{Feed forward neural networks}
-\label{subsec:ffnn}
-A feed forward neural network (FFNN) has an input layer, arbitrarily many hidden layers and one output layer. The neurons of each layer are connected to every neuron of the next layer. It is called feed forward because data  can only flow in one direction and there are no feedback loops. \autoref{fig:ffnn} shows a possible structure for a FFNN.
+\subsubsection{Fully connected neural networks}
+\label{subsubsec:fcnn}
+A fully connected neural network (FCNN) has an input layer, arbitrarily many hidden layers and one output layer. The neurons of each layer are connected to every neuron of the next layer. The data  can only flow in one direction, from the input layer towards the output layer. \autoref{fig:fcnn} shows a possible structure for a FCNN.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{ffnn}	
 \caption{Feed forward neural network with one hidden layer.}
 \floatfoot{Image by Chrislb (CC BY-SA) \url{https://commons.wikimedia.org/wiki/File:MultiLayerNeuralNetworkBigger_english.png}}
-\label{fig:ffnn}
+\label{fig:fcnn}
 \end{figure}
 
 For supervised learning the weights and biases of this network can be trained by using back-propagation. The input is fed through the network with randomly initialized parameters. The output is then compared to the true values by using a loss-function. The loss is then back-propagated through the network to adjust the parameters. With every training step, this process is repeated and the loss decreases.
 
 A special type of the FFNN, used for image recognition, is the convolutional neural network, which is described in the next section.
 
-\subsection{Convolutional neural networks}
-\label{subsec:cnn}
+\subsubsection{Convolutional neural networks}
+\label{subsubsec:cnn}
 Convolutional neural networks (CNNs) take an image as an input. The image can be seen as a 3-dimensional matrix, where the third dimension includes the different color channels. Instead of fully connected layers, convolutional layers are used. Convolutions work as filters that detect different features in the image. These filters usually have a small size (e.g. 3x3) and are moved over the image. \autoref{fig:cnn} shows a possible architecture of a CNN with multiple convolutional layers and a fully connected layer at the end.
 
 \begin{figure}[ht]
@@ -196,17 +215,9 @@ Convolutional neural networks (CNNs) take an image as an input. The image can be
 \label{fig:cnn}
 \end{figure}
 
-
 \newpage
-\section{Methods}
-\label{sec:methods}
-
-This section describes the steps taken to predict the bone erosion scores. It shows a classification model which predicts the Ratingen-score and a regression model which predicts the percentage of bone erosion.
-
-\subsection{Tools and Infrastructure}
-The models were built in Python 3.5 \cite{python} with the package Tensorflow 1.4 \cite{tensorflow} using the high level API Keras \cite{keras}. For general machine learning the package Scikit-learn \cite{scikit-learn} was used. The package Matplotlib \cite{matplotlib} was used to produce figures. In addition, the programming language R \cite{r} was used for further analysis of the results and for producing figures.
-
-For the training of the models a Nvidia Titan X (Pascal) graphics card was used.
+\section{Data}
+\label{sec:data}
 
 \subsection{Data preparation}
 \label{subsec:data_prep}
@@ -228,6 +239,19 @@ When training the CNN, it minimizes the overall loss-function. For imbalanced da
 \caption{Histogram of the bone erosion scores}
 \label{fig:imbalance}
 \end{figure}
+
+\newpage
+\section{Methods and Results}
+\label{sec:methods&results}
+
+This section describes the steps taken to predict the bone erosion scores. It shows a classification model which predicts the Ratingen-score and a regression model which predicts the percentage of bone erosion.
+
+\subsection{Software and Infrastructure}
+The models were built in Python 3.5 \cite{python} with the package Tensorflow 1.4 \cite{tensorflow} using the high level API Keras \cite{keras}. For general machine learning the package Scikit-learn \cite{scikit-learn} was used. The package Matplotlib \cite{matplotlib} was used to produce figures. In addition, the programming language R \cite{r} was used for further analysis of the results and for producing figures.
+
+For the training of the models a Nvidia Titan X (Pascal) graphics card was used.
+
+
 
 \subsection{Modeling}
 
@@ -403,15 +427,35 @@ MAE		& 0.653          \\ \bottomrule
 \label{tab:transfer_learning_metrics}
 \end{table}
 
-
-
 \subsection{Analysis of the embeddings}
 \label{subsec:embeddings}
 
-\clearpage
-\section{Results}
-\label{sec:results}
-...
+To visualize the high-level representations learned by our networks, t-SNE was applied to the outputs of the last hidden layer.
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Classification]{\includegraphics[width = 2.5in]{tsne_classification}} &
+\subfloat[Regression]{\includegraphics[width = 2.5in]{tsne_regression}}
+\end{tabular}
+\caption{T-SNE of the embeddings. Each point represents an image (joint) the color represents the bone erosion score.}
+\label{fig:tsne_embeddings}
+\end{figure}
+
+
+\subsection{Analysis of correlations between bone erosion and disease activity}
+\label{subsec:correlation}
+
+In order to determine wether there is a correlation between the bone erosion scores and the disease activity we compared the Rau-score and the DAS. Both scores are described in \ref{sec:theory}. 
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[BSR]{\includegraphics[width = 2.5in]{correlation_bsr}} &
+\subfloat[CRP]{\includegraphics[width = 2.5in]{correlation_crp}}
+\end{tabular}
+\caption{Scatter plot of DAS compared to Rau-scores}
+\label{fig:correlation}
+\end{figure}
+
 
 \newpage
 \section{Discussion}
