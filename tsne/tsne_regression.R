@@ -121,7 +121,7 @@ boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
         main = "Schlechtes eck (mean)")
 
 plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
-     main = "schlechtes Eck (alle werte)", ylim = c(0, 0.2), xlab = c(0,100))
+     main = "schlechtes Eck (mean)", ylim = c(0, 0.2), xlab = c(0,100))
 lines(density(x = m2_mean, na.rm = TRUE), col = "red")
 legend("topright",
        legend = c("gute", "schlechte"),
@@ -239,7 +239,7 @@ boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
         main = "Gutes eck (mean)")
 
 plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
-     main = "gutes Eck (alle werte)", ylim = c(0, 0.2), xlab = c(0,100))
+     main = "gutes Eck (mean)", ylim = c(0, 0.2), xlab = c(0,100))
 lines(density(x = m2_mean, na.rm = TRUE), col = "red")
 legend("topright",
        legend = c("schlechte", "gute"),
