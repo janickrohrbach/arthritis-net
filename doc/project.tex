@@ -219,6 +219,48 @@ Convolutional neural networks (CNNs) take an image as an input. The image can be
 \section{Data}
 \label{sec:data}
 
+The received data consists of jpg images of the joints and two csv datasets. The main dataset includes the following columns.
+
+\begin{table}[ht]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column name   & Description                                           \\ \midrule
+id\_x         & Unique observation id                                 \\
+patient\_id   & Unique patient id                                     \\
+date\_x       & Date of the consultation                              \\
+date\_y       & Date on which the joints were scored                  \\
+sop\_iuid     & Unique x-ray image id                                 \\
+body\_part    & Left/right hand/foot or both hands/feet               \\
+hand\_left\_x & Percentage of bone erosion for joint x                \\
+rau\_score    & Overall Rau-score described in \autoref{subsec:rau} \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The secondary dataset contains additional scores:
+
+
+\begin{table}[ht]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column name   & Description                                           \\ \midrule
+patient\_id   & Unique patient id                                     \\
+date       & Date of the consultation                              \\
+physician\_global\_disease\_activity       & Medical global assessment of disease activity                \\
+global\_patient\_estimate\_disease\_activity     & Patient estimate of disease activity \\
+das28bsr\_score    & DAS28BSR as described in \autoref{subsec:das}             \\
+das283crp\_score & DAS28ERP as described in \autoref{subsec:das} \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The two datasets can be merged on patient\_id and date/date\_x.
+
+
 \subsection{Data preparation}
 \label{subsec:data_prep}
 
@@ -430,7 +472,7 @@ MAE		& 0.653          \\ \bottomrule
 \subsection{Analysis of the embeddings}
 \label{subsec:embeddings}
 
-To visualize the high-level representations learned by our networks, t-SNE was applied to the outputs of the last hidden layer.
+To visualize the high-level representations learned by our networks, t-SNE was applied to the outputs of the last hidden layer. Each dot represents an image and the colors represent the true labels of those images. \autoref{fig:tsne_embeddings} shows that both neural networks managed to separate the different scores quite well. However, there are a few images with low scores in the area of the bad scores.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -445,7 +487,7 @@ To visualize the high-level representations learned by our networks, t-SNE was a
 \subsection{Analysis of correlations between bone erosion and disease activity}
 \label{subsec:correlation}
 
-In order to determine wether there is a correlation between the bone erosion scores and the disease activity we compared the Rau-score and the DAS. Both scores are described in \ref{sec:theory}. 
+In order to determine wether there is a correlation between the bone erosion scores and the disease activity we compared the Rau-score and the DAS. Both scores are described in \ref{sec:theory}. It is expected that the disease activity score is correlated with the bone erosion score. However, \autoref{fig:correlation} shows that there is only a very weak correlation. Between the two different DAS and the Rau-score.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -455,6 +497,8 @@ In order to determine wether there is a correlation between the bone erosion sco
 \caption{Scatter plot of DAS compared to Rau-scores}
 \label{fig:correlation}
 \end{figure}
+
+
 
 
 \newpage
