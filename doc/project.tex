@@ -31,7 +31,7 @@
 \vspace{-2.0cm}
 \includegraphics{zhaw}\\ 
 \vspace{3cm}
-Automated scoring of bone erosion for rheumatoid arthritis with deep neural networks\\
+Automated bone erosion scoring for rheumatoid arthritis with deep neural networks\\
 {\Large Zurich University of Applied Sciences}}
 \author{\begin{tabular}{rl}
   \textbf{Author:} & Janick Rohrbach \\
@@ -58,7 +58,12 @@ Zurich, December 22, 2017 \hspace{5cm} Janick Rohrbach
 \newpage
 
 \section*{Abstract}
-Abstract goes here
+
+Rheumatoid arthritis can cause irreversible damage to the joints. The severity of these bone erosions is scored by using x-ray images. This is usually done by a trained rheumatologist or radiologist and takes several minutes per patient.
+
+This thesis shows a method to automatically score the joints in x-ray images with deep convolutional neural networks. We test a classification and a regression approach on x-ray images of joints from the left hand. In the classification task we predict the Ratingen-score on a discrete integer scale from 0 to 5. The model achieves normalized test and validation accuracies of XX \% and YY \% respectively. The regression model predicts the continuous percentage of bone erosion between 0 \% and 100 \% with a test and validation mean squared error of XXXX and YYYY respectively.
+
+An automated scoring of bone erosion could help rheumatologists to spend less time with the scoring and have more time with the patient.
 
 \newpage
 
@@ -110,7 +115,7 @@ In a degree project Hensman and Masko \cite{hensman_2015} looked at the impact o
 
 \subsection{Aim and scope of this thesis}
 
-The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated and use a time series of images to predict the course of the disease.
+The aim of this thesis is to predict bone erosion scores from x-ray images. We further examine how the bone erosion and the disease activity are correlated.
 
 The work is based on images of the left hand only. There also exist images of right hands as well as images of left and right feet. But at this point in time, only the joints of left hands have been extracted from the images. It is assumed that the model will perform similar on the joints of the right hand. By fine-tuning the model on the images of joints from feet it should also perform well for those images.
 
@@ -122,7 +127,7 @@ The work is based on images of the left hand only. There also exist images of ri
 \subsection{Finger joints}
 \label{subsec:joints}
 
-\autoref{fig:joints} shows an x-ray image of a left hand similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the 5 carpometacarpal (MCP) joints are shown with blue bounding boxes. These are the joints, that are most affected by rheumatoid arthritis. The wrist joint is also affected, but we limited our analysis to the five PIP joints and the 5 MCP joints. Each of these joints is assessed with a score by a trained rheumatologist or radiologist. The scoring method is described in the next section.
+\autoref{fig:joints} shows an x-ray image of a left hand similar to the images received from the SCQM foundation. The five proximal interphalangeal (PIP) joints and the five carpometacarpal (MCP) joints are shown with blue bounding boxes. These are the joints, that are most affected by rheumatoid arthritis. The wrist joint is also affected, but we limited our analysis to the five PIP joints and the five MCP joints. Each of these joints is assessed with a score by a trained rheumatologist or radiologist. The scoring method is described in the next section.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{joints}	
@@ -156,7 +161,7 @@ Stage & Description                                                          \\ 
 \subsection{Rau-score}
 \label{subsec:rau}
 
-This score is an overall score, which is calculated after the Ratingen-scores for the individual joints are determined. The sum of the Ratingen-scores for all 32 joints (5 PIP, 5 MCP and 1 wrist joint per hand and 5 joints per foot) is multiplied by 38 and divided by the number of scored joints.
+This score is an overall score, which is calculated from the individual Ratingen-scores. The sum of the Ratingen-scores for all 32 joints (5 PIP, 5 MCP and 1 wrist joint per hand and 5 joints per foot) is multiplied by 38 and divided by the number of scored joints.
 
 \subsection{Disease activity score (DAS28)}
 \label{subsec:das}
@@ -171,13 +176,19 @@ The disease activity score (DAS28) measures the disease activity for the followi
 \end{enumerate}
 
 The DAS28 score is then calculated as follows. \cite{runmc_formula}
-
-$$DAS28_{ESR} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.7 * \ln{(ESR)} + 0.014 * g_h$$
-
-
-$$DAS28_{CRP} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.36 * \ln{(CRP + 1)} + 0.014 * g_h + 0.96$$
-
-A DAS28 $>$ 5.1 corresponds to high disease activity, DAS28 $<$ 3.2 stands for low disease activity and a DAS28 $<$ 2.6 stands for remission. \cite{runmc_formula}
+\\
+\\
+$DAS28_{ESR} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.7 * \ln{(ESR)} + 0.014 * g_h$
+\\
+\\
+$DAS28_{CRP} = 0.56 * \sqrt{n_t} + 0.28 * \sqrt{n_s} + 0.36 * \ln{(CRP + 1)} + 0.014 * g_h + 0.96$
+\\
+\\
+\begin{tabular}{@{}llll}
+$DAS28$ & $>$ & $5.2 =$ & high disease activity \\
+$DAS28$ & $<$ & $3.2 =$ & low disease activity \\
+$DAS28$ & $<$ & $2.6 =$ & remission
+\end{tabular}
 
 \subsection{Artificial neural networks}
 \label{subsec:ann}
@@ -185,9 +196,9 @@ This section offers a very brief introduction to artificial neural networks. A m
 
 The structure of an Artificial neural network (ANN) is inspired by the human brain. A brain consists of approximately 100 billion neurons which form an interconnected network. The neurons can communicate with each other by transmitting electrical potential. If the potential in a neuron reaches a certain threshold, it fires and transmits the potential to connected neurons. \cite{kruse_2016}
 
-An ANN is a very simplified model of this biological process. A single neuron can be described by following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron.
+An ANN is a very simplified model of this biological process. A single neuron can be described by the following equation. $$f\left(\sum_{i}w_i*x_i+b\right)$$ Where $x_i$ are the inputs, $w_i$ are the weights and $b$ is a bias term. The activation function $f$ models the firing of the neuron.
 
-These single neurons can then be combined to networks. The most simple network is the fully coonected neural network described in the following section.
+These single neurons can then be combined to networks. The most simple network is the fully connected neural network described in the following section.
 
 \subsubsection{Fully connected neural networks}
 \label{subsubsec:fcnn}
@@ -200,7 +211,9 @@ A fully connected neural network (FCNN) has an input layer, arbitrarily many hid
 \label{fig:fcnn}
 \end{figure}
 
-For supervised learning the weights and biases of this network can be trained by using back-propagation. The input is fed through the network with randomly initialized parameters. The output is then compared to the true values by using a loss-function. The loss is then back-propagated through the network to adjust the parameters. With every training step, this process is repeated and the loss decreases.
+The number of neurons per layer specifies the width of the neural network, whereas the number of hidden layers specifies the depth of a neural network. A neural network with many hidden layers is called a deep neural network.
+
+For supervised learning the weights and biases of this network can be trained by using back-propagation. The input is fed through the network with randomly initialized parameters. The output is then compared to the true values by using a loss-function. The loss is then back-propagated through the network to adjust the parameters. With every training step, this process is repeated and the loss decreases. This process is also called learning. And for deep neural networks we speak of deep learning.
 
 A special type of the FFNN, used for image recognition, is the convolutional neural network, which is described in the next section.
 
@@ -215,6 +228,8 @@ Convolutional neural networks (CNNs) take an image as an input. The image can be
 \label{fig:cnn}
 \end{figure}
 
+In contrast to classical machine learning we don't need to extract any features beforehand. The hidden layers of the deep convolutional neural network will do the feature extraction automatically.
+
 \newpage
 \section{Data}
 \label{sec:data}
@@ -223,8 +238,8 @@ The received data consists of jpg images of the joints and two csv datasets. The
 
 \begin{table}[ht]
 \centering
-\caption{My caption}
-\label{my-label}
+\caption{Columns of main dataset}
+\label{tab:main_dataset}
 \begin{tabular}{@{}ll@{}}
 \toprule
 Column name   & Description                                           \\ \midrule
@@ -239,20 +254,21 @@ rau\_score    & Overall Rau-score described in \autoref{subsec:rau} \\ \bottomru
 \end{tabular}
 \end{table}
 
-The secondary dataset contains additional scores:
+This is the dataset where the percentages of bone erosion for the joints of the left hand were extracted. The corresponding x-ray image can be found by using the sop\_iuid.
 
+The secondary dataset contains additional scores which only exist for some of the patients and some consultations.
 
 \begin{table}[ht]
 \centering
-\caption{My caption}
-\label{my-label}
+\caption{Columns of secondary dataset}
+\label{tab:sec_dataset}
 \begin{tabular}{@{}ll@{}}
 \toprule
 Column name   & Description                                           \\ \midrule
 patient\_id   & Unique patient id                                     \\
 date       & Date of the consultation                              \\
 physician\_global\_disease\_activity       & Medical global assessment of disease activity                \\
-global\_patient\_estimate\_disease\_activity     & Patient estimate of disease activity \\
+global\_patient\_estimate\_disease\_activity     & Patient estimate of disease activity   \\
 das28bsr\_score    & DAS28BSR as described in \autoref{subsec:das}             \\
 das283crp\_score & DAS28ERP as described in \autoref{subsec:das} \\ \bottomrule
 \end{tabular}
@@ -264,17 +280,15 @@ The two datasets can be merged on patient\_id and date/date\_x.
 \subsection{Data preparation}
 \label{subsec:data_prep}
 
-The pre-processing step formats the images into a suitable format that can be used as an input for the CNN. 
-
-The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
-
-The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (10 \% of the data). It was split such that all images of the same patient are in the same set.
+The data preparation step brings the jpg images into a suitable format that can be used as an input for the CNN. 
 
 The original images have values between 0 and 255. We divided the data by 255 in order to have values in the range of [0,1].
 
-The bone erosion scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with little bone erosion with scores between 0 and 25. There are very little observations with scores higher than 25. Only the fully eroded joints (score = 100) seem to be a bit more frequent.
+The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (10 \% of the data). It was split such that all images of the same patient are in the same set.
 
-When training the CNN, it minimizes the overall loss-function. For imbalanced data the CNN performs bad for the underrepresented part of the data. In this case, the model would be bad predictor for high scores. In order to make the model a good predictor for all cases, we tried weighting the loss function as well as oversampling the underrepresented classes.
+The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
+
+The bone erosion scores of the labeled joints are highly imbalanced. As seen in \autoref{fig:imbalance} most of the joints are healthy and received a score of 0. There are quite a few observations with little bone erosion with scores between 0 and 25. There are very little observations with scores higher than 25. Only the fully eroded joints (score = 100) seem to be a bit more frequent.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{imbalance}	
@@ -282,27 +296,29 @@ When training the CNN, it minimizes the overall loss-function. For imbalanced da
 \label{fig:imbalance}
 \end{figure}
 
+When training the CNN, it minimizes the overall loss-function. For imbalanced data the CNN performs bad for the underrepresented part of the data. In this case, the model would be bad predictor for high scores. In order to make the model a good predictor for all cases, we tried weighting the loss function as well as oversampling the underrepresented classes.
+
+
+
 \newpage
-\section{Methods and Results}
+\section{Methods and results}
 \label{sec:methods&results}
 
-This section describes the steps taken to predict the bone erosion scores. It shows a classification model which predicts the Ratingen-score and a regression model which predicts the percentage of bone erosion.
+In order to predict the bone erosion scores, different models were evaluated. This section describes the different steps in the evaluation process. It shows a classification model which predicts the Ratingen-score and a regression model which predicts the percentage of bone erosion.
 
-\subsection{Software and Infrastructure}
+\subsection{Software and infrastructure}
 The models were built in Python 3.5 \cite{python} with the package Tensorflow 1.4 \cite{tensorflow} using the high level API Keras \cite{keras}. For general machine learning the package Scikit-learn \cite{scikit-learn} was used. The package Matplotlib \cite{matplotlib} was used to produce figures. In addition, the programming language R \cite{r} was used for further analysis of the results and for producing figures.
 
 For the training of the models a Nvidia Titan X (Pascal) graphics card was used.
 
+\subsection{Base models}
 
-
-\subsection{Modeling}
-
-We decided to create a classification as well as a regression model. The architecture of both models is similar and is inspired by the VGG16 net. It consists of 6 blocks of two convolutional layers of the size 3x3 followed by a max pooling layer. The number of filters per convolutional layer is increasing with every second block, whereas the size of the layers is decreasing due to the max pooling layers. Every convolutional layer uses batch normalization before the Relu activation function.
+We decided to create a classification as well as a regression model. The architecture of both models is similar and is inspired by the VGG16 net. It consists of 6 blocks of two convolutional layers of the size 3x3 followed by a max pooling layer. The number of filters per convolutional layer is increasing with every second block, whereas the size of the layers is decreasing due to the max pooling layers. Every convolutional layer uses batch normalization before the ReLu activation function.
 
 This first part is identical for both models. We then flatten the output of the last convolution block and use two dense layers with batch normalization, ReLu activation and dropout. Only the number of neurons in the dense layers is different between the two models. The output layer however is different between the two models and described in the next two sections.
 
-\subsection{Classification}
-\label{subsec:clas}
+\subsubsection{Classification model}
+\label{subsubsec:clas}
 
 The classification model directly predicts the Ratingen-score. The output layer has 6 neurons according to the 6 Ratingen classes (0-5). The Softmax activation function is then used to predict the probabilities for each class. The architecture of this CNN is shown in \autoref{fig:cnn_cla}.
 
@@ -322,9 +338,7 @@ As described in \autoref{subsec:data_prep} we tried different approaches to hand
 \item The third model used the same data as the first model, but the loss function was weighted with class weights. The class weights where chosen such that the class weight multiplied by the number of observation in that class equals to the same value for all classes.
 \end{enumerate}
 
-Model b) was trained for the full 25 epochs, whereas the other two models started overfitting and had to be stopped early after 9 epochs.
-
-\autoref{fig:confusion} shows the normalized confusion matrices for the test dataset for the three models.
+Model b) was trained for the full 25 epochs, whereas the other two models started overfitting and had to be stopped early after 9 epochs. \autoref{fig:confusion} shows the normalized confusion matrices for the test dataset for the three models.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -338,7 +352,7 @@ Model b) was trained for the full 25 epochs, whereas the other two models starte
 
 The evaluation metrics for the three models can be seen in \autoref{tab:metrics_cla}. It turned out that the accuracy is not a suitable metric. Model a) has the highest accuracy but makes a lot of misclassifications in the under-represented classes. Whereas the accuracy of model c) is the lowest, but the accuracy for the underrepresented classes is much better.
 
-Therefore, we decided to use the class normalized accuracy as our evaluation metric. It is the mean of six class accuracies. It describes much better, whether our model is a good predictor for all classes.
+Therefore, we decided to use the class normalized accuracy as our evaluation metric. It is the mean of the six class accuracies. It describes much better, whether our model is a good predictor for all classes.
 
 As a second metric, we calculated the class normalized accuracy for predictions that are in the right class or no more than one class above or below the correct class. This metric takes into account, that a misclassification by 1 is far less severe than a misclassification by 5.
 
@@ -355,10 +369,10 @@ Class normalized accuracy $\pm$ 1 & 0.558 & 0.675 & 0.817 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-Considering the class normalized accuracies, model c) is clearly superior to the other two models. Therefore, this model was selected for the classification task.
+Considering the class normalized accuracies, model c) is clearly superior to the other two models. Therefore, this model was selected as the base model for the classification task.
 
-\subsection{Regression}
-\label{subsec:reg}
+\subsubsection{Regression model}
+\label{subsubsec:reg}
 
 
 For the regression model, we decided to predict the cumulative density function (cdf) instead of predicting directly the bone erosion score. This method provides a small improvement in the mean squared error (mse) compared to a model that has only one output neuron.
@@ -388,7 +402,7 @@ It is difficult to visualize CRPS, but the shaded area in \autoref{fig:crps} hel
 \label{fig:crps}
 \end{figure}
 
-This model was trained in the same ways as described in \ref{subsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
+This model was trained in the same ways as described in \ref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -405,7 +419,7 @@ There is no big visual difference between the three plots. We noticed that the m
 ?????????????
 
 
-When looking at the evaluation metrics in \autoref{tab:metrics_reg}, we can see, that model a) has a smallest mean squared error (mse) as well as the smallest mean absolute error (mae) of the three models. Therefore we decided to use model a) for regression.
+When looking at the evaluation metrics in \autoref{tab:metrics_reg}, we can see, that model a) has a smallest mean squared error (mse) as well as the smallest mean absolute error (mae) of the three models. Therefore we decided to use model a) as the base model for regression.
 
 \begin{table}[ht]
 \centering
@@ -425,7 +439,7 @@ Mean absolute error (mae)       & 4.046 & 4.072 & 4.057 \\
 \subsection{Transfer learning}
 \label{subsec:tl}
 
-As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used their pre-trained weights and cut off their output layer. Instead we added two dense layers and an output layer identical to the output layers described in \ref{subsec:clas} and \ref{subsec:reg} for classification and regression respectively. Since the model is trained on color images our greyscale data was transformed to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
+As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used the pre-trained weights and cut off the output layer. Instead we added two dense layers and an output layer identical to the output layers described in \ref{subsubsec:clas} and \ref{subsubsec:reg} for classification and regression respectively. Since the model is trained on color images, the greyscale images were converted to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{transfer_learning}	
@@ -433,8 +447,7 @@ As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to
 \label{fig:transfer_learning}
 \end{figure}
 
-We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs. The predictions for the test set are shown in \autoref{fig:transfer_learning_results}. When comparing the confusion matrix for the classification model with Model c) in \autoref{fig:confusion} we can see that the transfer learning model has higher accuracy for the extreme cases 0, 1 and 5. However, the model seems to perform worse for the Ratingen-scores 2, 3 and 4. The regression model
-
+We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs. The predictions for the test set are shown in \autoref{fig:transfer_learning_results}. When comparing the confusion matrix for the classification model with Model c) in \autoref{fig:confusion} we can see that the transfer learning model has higher accuracy for the extreme cases 0, 1 and 5. However, the model seems to perform worse for the Ratingen-scores 2, 3 and 4. The regression model seems to better predict very bad cases with scores of 100. There are still a few outliers, but far fewer than in the base model.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -445,7 +458,13 @@ We then froze all existing weights and only trained the dense layers and the out
 \label{fig:transfer_learning_results}
 \end{figure}
 
-\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. When comparing the metrics to model c) in \autoref{tab:metrics_cla} and model a) in \autoref{tab:metrics_reg} we can see that the classification model has a higher class normalized accuracy but the class normalized accuracy $\pm$ 1 is worse. The transfer learning model for classification is not clearly better than the base model. The regression model however is considerably better than the base model with all evaluation metrics showing better results. 
+\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. When comparing the metrics to model c) in \autoref{tab:metrics_cla} and model a) in \autoref{tab:metrics_reg} we can see that the classification model has a higher class normalized accuracy but the class normalized accuracy $\pm$ 1 is worse. To compare the accuracies of the two models, Wilson score intervals were used. The Wilson score interval for the normalized accuracy of the base model and the transfer learning model are (0.415, 0.429) and (0.429, 0.443) respectively.
+
+??? +- 1 : base: (0.812, 0.822)
+transfer: (0.781, 0.793)
+
+
+The transfer learning model for classification is not clearly better than the base model. The regression model however is considerably better than the base model with all evaluation metrics showing better results. 
 
 \begin{table}[ht]
 \begin{tabular}{cc}
