@@ -256,7 +256,7 @@ rau\_score    & Overall Rau-score described in \autoref{subsec:rau} \\ \bottomru
 
 This is the dataset where the percentages of bone erosion for the joints of the left hand were extracted. The corresponding x-ray image can be found by using the sop\_iuid.
 
-The secondary dataset contains additional scores which only exist for some of the patients and some consultations.
+The secondary dataset contains additional scores which only exist for some of the patients and some consultations. The two datasets can be merged on patient\_id and date/date\_x.
 
 \begin{table}[ht]
 \centering
@@ -274,7 +274,8 @@ das283crp\_score & DAS28ERP as described in \autoref{subsec:das} \\ \bottomrule
 \end{tabular}
 \end{table}
 
-The two datasets can be merged on patient\_id and date/date\_x.
+
+The images of the joints were already extracted from all the x-ray images of left hands. In total there were 102'265 images of single joins available.
 
 
 \subsection{Data preparation}
@@ -458,13 +459,9 @@ We then froze all existing weights and only trained the dense layers and the out
 \label{fig:transfer_learning_results}
 \end{figure}
 
-\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. When comparing the metrics to model c) in \autoref{tab:metrics_cla} and model a) in \autoref{tab:metrics_reg} we can see that the classification model has a higher class normalized accuracy but the class normalized accuracy $\pm$ 1 is worse. To compare the accuracies of the two models, Wilson score intervals were used. The Wilson score interval for the normalized accuracy of the base model and the transfer learning model are (0.415, 0.429) and (0.429, 0.443) respectively.
+\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. To compare the metrics of the new classification model with the base model, Wilson score intervals on the 5 \% significance level were computed. The Wilson score intervals for the class normalized accuracy of the base model and the transfer learning model are (0.415, 0.429) and (0.43, 0.443) respectively. The transfer learning model is slightly better. The Wilson score intervals for the second metric, the class normalized accuracy $\pm$ 1 are (0.812, 0.823) for the base model and (0.781, 0.793) for the transfer learning model. Here the base model is better. Since the transfer learning model for classification only brings a very small improvement in the class normalized accuracy and worsens the class normalized accuracy $\pm$ 1, we decided to keep the base classification model over the transfer learning model.
 
-??? +- 1 : base: (0.812, 0.822)
-transfer: (0.781, 0.793)
-
-
-The transfer learning model for classification is not clearly better than the base model. The regression model however is considerably better than the base model with all evaluation metrics showing better results. 
+The regression model however is considerably better than the base model with all evaluation metrics showing better results. The transfer learning model for regression improves the MSE from 80.9 to 72.8 and the MAE from 4.0 to 0.7. Therefore we decided to keep the new transfer learning model over the base regression model.
 
 \begin{table}[ht]
 \begin{tabular}{cc}
@@ -488,6 +485,15 @@ MAE		& 0.653          \\ \bottomrule
 \label{tab:transfer_learning_metrics}
 \end{table}
 
+\subsection{Data augmentation}
+\label{subsec:augmentation}
+
+\subsection{Validation}
+\label{subsec:validation}
+
+\subsection{Attention maps}
+\label{subsec:attention}
+
 \subsection{Analysis of the embeddings}
 \label{subsec:embeddings}
 
@@ -501,6 +507,10 @@ To visualize the high-level representations learned by our networks, t-SNE was a
 \caption{T-SNE of the embeddings. Each point represents an image (joint) the color represents the bone erosion score.}
 \label{fig:tsne_embeddings}
 \end{figure}
+
+
+\subsubsection{KNN of embeddings}
+\label{subsubsec:knn_embeddings}
 
 
 \subsection{Analysis of correlations between bone erosion and disease activity}
@@ -526,7 +536,7 @@ In order to determine wether there is a correlation between the bone erosion sco
 
 
 \newpage
-\section{Conclusion}
+\section{Conclusion and outlook}
 \label{sec:conclusion}
 
 
