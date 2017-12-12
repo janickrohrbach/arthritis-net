@@ -403,7 +403,7 @@ It is difficult to visualize CRPS, but the shaded area in \autoref{fig:crps} hel
 \label{fig:crps}
 \end{figure}
 
-This model was trained in the same ways as described in \ref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
+This model was trained in the same ways as described in \autoref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -438,9 +438,9 @@ Mean absolute error (mae)       & 4.046 & 4.072 & 4.057 \\
 \end{table}
 
 \subsection{Transfer learning}
-\label{subsec:tl}
+\label{subsec:transfer_learning}
 
-As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used the pre-trained weights and cut off the output layer. Instead we added two dense layers and an output layer identical to the output layers described in \ref{subsubsec:clas} and \ref{subsubsec:reg} for classification and regression respectively. Since the model is trained on color images, the greyscale images were converted to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
+As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to try, whether transfer learning could improve our predictions. We decided to use the Inception V3 model \cite{szegedy_2015} which was pre-trained on the Imagenet dataset. We used the pre-trained weights and cut off the output layer. Instead we added two dense layers and an output layer identical to the output layers described in \autoref{subsubsec:clas} and \autoref{subsubsec:reg} for classification and regression respectively. Since the model is trained on color images, the greyscale images were converted to RGB. The Inception V3 model further requires the input data to be transformed to [-1,1] which was done in an additional pre-processing step.
 
 \begin{figure}[ht]
 \includegraphics[width=10cm]{transfer_learning}	
@@ -488,6 +488,7 @@ MAE		& 3.119          \\ \bottomrule
 \subsection{Validation}
 \label{subsec:validation}
 
+We have now found the best two models
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -560,7 +561,7 @@ To visualize the high-level representations learned by our networks, t-SNE was a
 \subsection{Analysis of correlations between bone erosion and disease activity}
 \label{subsec:correlation}
 
-In order to determine wether there is a correlation between the bone erosion scores and the disease activity we compared the Rau-score and the DAS. Both scores are described in \ref{sec:theory}. It is expected that the disease activity score is correlated with the bone erosion score. However, \autoref{fig:correlation} shows that there is only a very weak correlation. Between the two different DAS and the Rau-score.
+In order to determine wether there is a correlation between the bone erosion scores and the disease activity we compared the Rau-score and the DAS. Both scores are described in \autoref{sec:theory}. It is expected that the disease activity score is correlated with the bone erosion score. However, \autoref{fig:correlation} shows that there is only a very weak correlation. Between the two different DAS and the Rau-score.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
