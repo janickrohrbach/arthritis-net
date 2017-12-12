@@ -478,21 +478,65 @@ Class normalized accuracy $\pm$ 1 & 0.787          \\ \bottomrule
         & Regression \\ \midrule
 CRPS    & 0.0274          \\
 MSE     & 72.768          \\
-MAE		& 0.653          \\ \bottomrule
+MAE		& 3.119          \\ \bottomrule
 \end{tabular}
 \end{tabular}
 \caption{Evaluation metrics for the transfer learning models}
 \label{tab:transfer_learning_metrics}
 \end{table}
 
-\subsection{Data augmentation}
-\label{subsec:augmentation}
-
 \subsection{Validation}
 \label{subsec:validation}
 
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Classification]{\includegraphics[width = 2.5in]{clas_val}} &
+\subfloat[Regression]{\includegraphics[width = 2.5in]{reg_val}}
+\end{tabular}
+\caption{Predictions of the best two models for the validation set}
+\label{fig:validation}
+\end{figure}
+
+
+
+\begin{table}[ht]
+\begin{tabular}{cc}
+\begin{tabular}{@{}ll@{}}
+\toprule
+                                & Classification \\ \midrule
+Accuracy                        & 0.551           \\
+Class normalized accuracy       & 0.432          \\
+Class normalized accuracy $\pm$ 1 & 0.832          \\ \bottomrule
+\end{tabular}
+\quad
+\begin{tabular}{@{}ll@{}}
+\toprule
+        & Regression \\ \midrule
+CRPS    & 0.0309         \\
+MSE     & 97.586        \\
+MAE		& 3.496         \\ \bottomrule
+\end{tabular}
+\end{tabular}
+\caption{Evaluation metrics for the best models evaluated on the validation set}
+\label{tab:validation_metrics}
+\end{table}
+
+
+
 \subsection{Attention maps}
 \label{subsec:attention}
+
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Classification]{\includegraphics[width = 2.5in]{clas_attention}} &
+\subfloat[Regression]{\includegraphics[width = 2.5in]{reg_attention}}
+\end{tabular}
+\caption{Attention maps of the best two models for random samples of the test set}
+\label{fig:validation}
+\end{figure}
+
 
 \subsection{Analysis of the embeddings}
 \label{subsec:embeddings}
