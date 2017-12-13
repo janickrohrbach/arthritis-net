@@ -61,7 +61,7 @@ Zurich, December 22, 2017 \hspace{5cm} Janick Rohrbach
 
 Rheumatoid arthritis can cause irreversible damage to the joints. The severity of these bone erosions is scored by using x-ray images. This is usually done by a trained rheumatologist or radiologist and takes several minutes per patient.
 
-This thesis shows a method to automatically score the joints in x-ray images with deep convolutional neural networks. We test a classification and a regression approach on x-ray images of joints from the left hand. In the classification task we predict the Ratingen-score on a discrete integer scale from 0 to 5. The model achieves normalized test and validation accuracies of XX \% and YY \% respectively. The regression model predicts the continuous percentage of bone erosion between 0 \% and 100 \% with a test and validation mean squared error of XXXX and YYYY respectively.
+This thesis shows a method to automatically score the joints in x-ray images with deep convolutional neural networks. We test a classification and a regression approach on x-ray images of joints from the left hand. In the classification task we predict the Ratingen-score on a discrete integer scale from 0 to 5. The model achieves class normalized test and validation accuracies of 42 \% and 43 \% respectively. The class normalized accuracies of predictions that are off by no more than 1 are 82 \% for the test set and 83 \% for the validation set. The regression model predicts the continuous percentage of bone erosion between 0 \% and 100 \% with a test and validation mean squared error of 72.8 and 97.6 respectively. The mean absolute error is 3.1 for the test set and 3.5 for the validation set.
 
 An automated scoring of bone erosion could help rheumatologists to spend less time with the scoring and have more time with the patient.
 
@@ -405,6 +405,8 @@ It is difficult to visualize CRPS, but the shaded area in \autoref{fig:crps} hel
 
 This model was trained in the same ways as described in \autoref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
 
+!!!!!!!! umwandlung von predictions zu score
+
 \begin{figure}[ht]
 \begin{tabular}{ccc}
 \subfloat[Original data]{\includegraphics[width = 1.5in]{regression_original}} &
@@ -488,7 +490,7 @@ MAE		& 3.119          \\ \bottomrule
 \subsection{Validation}
 \label{subsec:validation}
 
-We have now found the best two models
+We have now found the best models for classification and regression. Those two models are now validated on the validation set. \autoref{fig:validation} shows the predictions of the two models for the validation set.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -499,7 +501,7 @@ We have now found the best two models
 \label{fig:validation}
 \end{figure}
 
-
+The evaluation metrics for the predictions of the two models for the validation set are shown in \autoref{tab:validation_metrics}.
 
 \begin{table}[ht]
 \begin{tabular}{cc}
@@ -523,11 +525,26 @@ MAE		& 3.496         \\ \bottomrule
 \label{tab:validation_metrics}
 \end{table}
 
+The evaluation metrics of the classification model for the validation set are very similar to the ones for the test set. The classification model performs equally well on the test and validation set. The regression model however performed worse on the validation set. Both, the MSE and MAE are higher for the validation set than the test set. This could indicate that the regression model is overfitting.
+
+\subsection{Comparing the classification and regression model}
+\label{subsec:comparison_clas_reg}
+
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Test]{\includegraphics[width = 2.5in]{reg_clas_test}} &
+\subfloat[Validation]{\includegraphics[width = 2.5in]{reg_clas_val}}
+\end{tabular}
+\caption{Confusion matrix of predictions of the regression model converted to classes.}
+\label{fig:comparison}
+\end{figure}
 
 
 \subsection{Attention maps}
 \label{subsec:attention}
 
+In order to see where the attention of the models lies, the outputs of intermediate convolutional layers were visualized. \autoref{fig:attention} shows that the attention of both models focuses on the gap between the two bones most of the time. This is what was desired, since the bone erosion happens in that area.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -535,7 +552,7 @@ MAE		& 3.496         \\ \bottomrule
 \subfloat[Regression]{\includegraphics[width = 2.5in]{reg_attention}}
 \end{tabular}
 \caption{Attention maps of the best two models for random samples of the test set}
-\label{fig:validation}
+\label{fig:attention}
 \end{figure}
 
 
@@ -553,10 +570,36 @@ To visualize the high-level representations learned by our networks, t-SNE was a
 \label{fig:tsne_embeddings}
 \end{figure}
 
+Visually, it appears like the separation between the different classes is a bit more distinct in the regression model. 
 
-\subsubsection{KNN of embeddings}
+\subsubsection{K-nearest-neighbor of embeddings}
 \label{subsubsec:knn_embeddings}
 
+By doing a k-nearest-neighbor (KNN) classification on the embeddings of the classification model we can see how well the model separates the different classes. The KNN classification achieved a class normalized accuracy of 31 \% which is worse than the class normalized accuracy achieved by the fully connected layers of the CNN of 42 \%. And also the class normalized accuracy $\pm$ 1 is worse with 63 \% compared to 82 \%.
+
+??????????? compare to classification transfer learning embeddings
+
+The same can be done with a KNN regression for the embeddings of the regression model. Surprisingly, the KNN regression performs similarly well as the fully connected layers of the CNN. The MAE is a bit worse with 3.7 compared to 3.1, but the MSE is even better with 66.2 compared to 72.8. This means that the 
+
+???????????? compare to regression base model embeddings
+
+\subsubsection{Analysis of outliers in the embeddings}
+\label{subsubsec:outliers_embeddings}
+
+Next we analyzed the outliers in the embeddings of the regression model. We defined the area on the right side with majoritarian scores higher than 1 as the "bad area" whereas the area on the left side with majoritarian scores equal to zero is called the "good area". Our hypothesis is, that the rheumatologist is more likely to score a damaged joint lower if the other joints of this patient are healthy. The same reasoning can be applied in the reverse. The rheumatologist might be more likely to give a healthy joint a higher score if the other joints of this patient are damaged.
+
+We defined all joints with a score $leq$ 20 \% (Ratingen-score = 0) as healthy and all joints with a score $>$ 20 \% as damaged. In the "bad area" all healthy joints are seen as outliers whereas in the "good area" all damaged joints are seen as outliers \Cref{fig:outlier_embeddings} shows the mean score of patients which have a score that is an outlier compared to all scores that are not outliers.
+
+\begin{figure}[ht]
+\begin{tabular}{cc}
+\subfloat[Bad area]{\includegraphics[width = 2.5in]{outlier_bad}} &
+\subfloat[Good area]{\includegraphics[width = 2.5in]{outlier_good}}
+\end{tabular}
+\caption{Average score of patients which have a score that is an outlier.}
+\label{fig:outlier_embeddings}
+\end{figure}
+
+These findings support our hypothesis. Indeed outliers in the "bad area" seem to be of patients with healthier joints compared to the other patients. The opposite is true for the "good area" as well.
 
 \subsection{Analysis of correlations between bone erosion and disease activity}
 \label{subsec:correlation}
@@ -572,18 +615,37 @@ In order to determine wether there is a correlation between the bone erosion sco
 \label{fig:correlation}
 \end{figure}
 
-
-
+This surprising result suggests that the amount of bone erosion is only a minor factor in the disease activity. 
 
 \newpage
 \section{Discussion}
 \label{sec:discussion}
+
+- Best model
+
+- compare regression to classification
+
+- Bone erosion doesn't say much about disease activity
+
+- Rheumatologist bias?
 
 
 \newpage
 \section{Conclusion and outlook}
 \label{sec:conclusion}
 
+- Predictions are a good estimate but not as good as a trained professional
+
+- Might still save some time
+
+- ????
+
+- Outlook: 
+
+- Uncertain images -> rheumatologist, rest automated
+
+- Occluding parts of the image
+ 
 
 
 \newpage
