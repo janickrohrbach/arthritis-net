@@ -31,11 +31,11 @@
 \vspace{-2.0cm}
 \includegraphics{zhaw}\\ 
 \vspace{3cm}
-Automated bone erosion scoring for rheumatoid arthritis with deep neural networks\\
+Automated bone erosion scoring for rheumatoid arthritis with deep convolutional neural networks\\
 {\Large Zurich University of Applied Sciences}}
 \author{\begin{tabular}{rl}
   \textbf{Author:} & Janick Rohrbach \\
-  \textbf{Supervisor:} & Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
+  \textbf{Supervisor:} & Prof. Dr. Oliver Dürr \\ & Prof. Dr. Beate Sick \\
   \textbf{Industrial Partner:} & Seantis GmbH \\
   \textbf{External Supervisor:} & Fabian Reinhard \\ & Dr. Tobias Reinhard \\
   \textbf{Date:} & December 22, 2017 \\
@@ -61,14 +61,14 @@ Zurich, December 22, 2017 \hspace{5cm} Janick Rohrbach
 
 Rheumatoid arthritis can cause irreversible damage to the joints. The severity of these bone erosions is scored by using x-ray images. This is usually done by a trained rheumatologist or radiologist and takes several minutes per patient.
 
-This thesis shows a method to automatically score the joints in x-ray images with deep convolutional neural networks. We test a classification and a regression approach on x-ray images of joints from the left hand. In the classification task we predict the Ratingen-score on a discrete integer scale from 0 to 5. The model achieves class normalized test and validation accuracies of 42 \% and 43 \% respectively. The class normalized accuracies of predictions that are off by no more than 1 are 82 \% for the test set and 83 \% for the validation set. The regression model predicts the continuous percentage of bone erosion between 0 \% and 100 \% with a test and validation mean squared error of 72.8 and 97.6 respectively. The mean absolute error is 3.1 for the test set and 3.5 for the validation set.
+This thesis shows a method to automatically score the joints in x-ray images with deep convolutional neural networks. We take a classification and a regression approach on x-ray images of joints from the left hand. In the classification task we predict the Ratingen-score on a discrete integer scale from 0 to 5. The model achieves class normalized validation and test accuracies of 42 \% and 43 \% respectively. The class normalized accuracies of predictions that are off by no more than 1 are 82 \% for the validation set and 83 \% for the test set. The regression model predicts the continuous percentage of bone erosion between 0 \% and 100 \% with a validation and test mean squared error of 72.8 and 97.6 respectively. The mean absolute error is 3.1 for the validation set and 3.5 for the test set.
 
 An automated scoring of bone erosion could help rheumatologists to spend less time with the scoring and have more time with the patient.
 
 \newpage
 
 \section*{Acknowledgements}
-I would like to express my sincere thanks to my supervisors Beate Sick and Oliver Dürr who provided me with guidance and support during the writing of this thesis. 
+I would like to express my sincere thanks to my supervisors Oliver Dürr and Beate Sick who provided me with guidance and support during the writing of this thesis. 
 
 I would also like to thank Fabian Reinhard and Tobias Reinhard (Seantis GmbH) for their valuable inputs. 
 
@@ -285,7 +285,7 @@ The data preparation step brings the jpg images into a suitable format that can 
 
 The original images have values between 0 and 255. We divided the data by 255 in order to have values in the range of [0,1].
 
-The data was randomly split into a training set (70 \% of the data), a test set (20 \% of the data) and a validation set (10 \% of the data). It was split such that all images of the same patient are in the same set.
+The data was randomly split into a training set (70 \% of the data), a validation set (20 \% of the data) and a test set (10 \% of the data). It was split such that all images of the same patient are in the same set.
 
 The images of the joints have varying exposure. Some images are very dark while others are very bright. It was therefore considered to apply a histogram equalization, which is a linear transformation that maps the lightest pixel to 255 and the darkest pixel to 1. However, this transformation did not improve the accuracy of the model and was not used for the final model.
 
@@ -339,7 +339,7 @@ As described in \autoref{subsec:data_prep} we tried different approaches to hand
 \item The third model used the same data as the first model, but the loss function was weighted with class weights. The class weights where chosen such that the class weight multiplied by the number of observation in that class equals to the same value for all classes.
 \end{enumerate}
 
-Model b) was trained for the full 25 epochs, whereas the other two models started overfitting and had to be stopped early after 9 epochs. \autoref{fig:confusion} shows the normalized confusion matrices for the test dataset for the three models.
+Model b) was trained for the full 25 epochs, whereas the other two models started overfitting and had to be stopped early after 9 epochs. \autoref{fig:confusion} shows the normalized confusion matrices for the validation dataset for the three models.
 
 \begin{figure}[ht]
 \begin{tabular}{ccc}
@@ -353,9 +353,9 @@ Model b) was trained for the full 25 epochs, whereas the other two models starte
 
 The evaluation metrics for the three models can be seen in \autoref{tab:metrics_cla}. It turned out that the accuracy is not a suitable metric. Model a) has the highest accuracy but makes a lot of misclassifications in the under-represented classes. Whereas the accuracy of model c) is the lowest, but the accuracy for the underrepresented classes is much better.
 
-Therefore, we decided to use the class normalized accuracy as our evaluation metric. It is the mean of the six class accuracies. It describes much better, whether our model is a good predictor for all classes.
+Therefore, we decided to use the normalized accuracy as our evaluation metric. It is the mean of the six class accuracies. It describes much better, whether our model is a good predictor for all classes.
 
-As a second metric, we calculated the class normalized accuracy for predictions that are in the right class or no more than one class above or below the correct class. This metric takes into account, that a misclassification by 1 is far less severe than a misclassification by 5.
+As a second metric, we calculated the normalized accuracy for predictions that are in the right class or no more than one class above or below the correct class. This metric takes into account, that a misclassification by 1 is far less severe than a misclassification by 5.
 
 \begin{table}[ht]
 \centering
@@ -365,8 +365,8 @@ As a second metric, we calculated the class normalized accuracy for predictions 
 \toprule
                                 & a)    & b)    & c)    \\ \midrule
 Accuracy                        & 0.726 & 0.73 & 0.569 \\
-Class normalized accuracy       & 0.264 & 0.337 & 0.422 \\
-Class normalized accuracy $\pm$ 1 & 0.558 & 0.675 & 0.817 \\ \bottomrule
+Normalized accuracy       & 0.264 & 0.337 & 0.422 \\
+Normalized $\pm$ 1 accuracy  & 0.558 & 0.675 & 0.817 \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -403,7 +403,7 @@ It is difficult to visualize CRPS, but the shaded area in \autoref{fig:crps} hel
 \label{fig:crps}
 \end{figure}
 
-This model was trained in the same ways as described in \autoref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the test set in all three cases.
+This model was trained in the same ways as described in \autoref{subsubsec:clas} on the original data, oversampled data and with a weighted loss function. This time all three models were trainer for 25 epochs, as they did not start overfitting. \autoref{fig:hexbin} shows the predictions for the validation set in all three cases.
 
 !!!!!!!! umwandlung von predictions zu score
 
@@ -450,7 +450,7 @@ As Tajbakhsh et al. \cite{tajbakhsh_2017} suggested in their paper, we wanted to
 \label{fig:transfer_learning}
 \end{figure}
 
-We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs. The predictions for the test set are shown in \autoref{fig:transfer_learning_results}. When comparing the confusion matrix for the classification model with Model c) in \autoref{fig:confusion} we can see that the transfer learning model has higher accuracy for the extreme cases 0, 1 and 5. However, the model seems to perform worse for the Ratingen-scores 2, 3 and 4. The regression model seems to better predict very bad cases with scores of 100. There are still a few outliers, but far fewer than in the base model.
+We then froze all existing weights and only trained the dense layers and the output layer for 25 epochs. Afterwards we repeated the training for all layers for an additional 25 epochs. The predictions for the validation set are shown in \autoref{fig:transfer_learning_results}. When comparing the confusion matrix for the classification model with Model c) in \autoref{fig:confusion} we can see that the transfer learning model has higher accuracy for the extreme cases 0, 1 and 5. However, the model seems to perform worse for the Ratingen-scores 2, 3 and 4. The regression model seems to better predict very bad cases with scores of 100. There are still a few outliers, but far fewer than in the base model.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
@@ -461,7 +461,7 @@ We then froze all existing weights and only trained the dense layers and the out
 \label{fig:transfer_learning_results}
 \end{figure}
 
-\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. To compare the metrics of the new classification model with the base model, Wilson score intervals on the 5 \% significance level were computed. The Wilson score intervals for the class normalized accuracy of the base model and the transfer learning model are (0.415, 0.429) and (0.43, 0.443) respectively. The transfer learning model is slightly better. The Wilson score intervals for the second metric, the class normalized accuracy $\pm$ 1 are (0.812, 0.823) for the base model and (0.781, 0.793) for the transfer learning model. Here the base model is better. Since the transfer learning model for classification only brings a very small improvement in the class normalized accuracy and worsens the class normalized accuracy $\pm$ 1, we decided to keep the base classification model over the transfer learning model.
+\autoref{tab:transfer_learning_metrics} shows the evaluation metrics for the two models. To compare the metrics of the new classification model with the base model, Wilson score intervals on the 5 \% significance level were computed. The Wilson score intervals for the normalized accuracy of the base model and the transfer learning model are (0.415, 0.429) and (0.43, 0.443) respectively. The transfer learning model is slightly better. The Wilson score intervals for the second metric, the normalized $\pm$ 1 accuracy are (0.812, 0.823) for the base model and (0.781, 0.793) for the transfer learning model. Here the base model is better. Since the transfer learning model for classification only brings a very small improvement in the normalized accuracy and worsens the normalized $\pm$ 1 accuracy, we decided to keep the base classification model over the transfer learning model.
 
 The regression model however is considerably better than the base model with all evaluation metrics showing better results. The transfer learning model for regression improves the MSE from 80.9 to 72.8 and the MAE from 4.0 to 0.7. Therefore we decided to keep the new transfer learning model over the base regression model.
 
@@ -471,8 +471,8 @@ The regression model however is considerably better than the base model with all
 \toprule
                                 & Classification \\ \midrule
 Accuracy                        & 0.65           \\
-Class normalized accuracy       & 0.436          \\
-Class normalized accuracy $\pm$ 1 & 0.787          \\ \bottomrule
+Normalized accuracy       & 0.436          \\
+Normalized $\pm$ 1 accuracy  & 0.787          \\ \bottomrule
 \end{tabular}
 \quad
 \begin{tabular}{@{}ll@{}}
@@ -509,8 +509,8 @@ The evaluation metrics for the predictions of the two models for the validation 
 \toprule
                                 & Classification \\ \midrule
 Accuracy                        & 0.551           \\
-Class normalized accuracy       & 0.432          \\
-Class normalized accuracy $\pm$ 1 & 0.832          \\ \bottomrule
+Normalized accuracy       & 0.432          \\
+Normalized $\pm$ 1 accuracy & 0.832          \\ \bottomrule
 \end{tabular}
 \quad
 \begin{tabular}{@{}ll@{}}
@@ -525,20 +525,41 @@ MAE		& 3.496         \\ \bottomrule
 \label{tab:validation_metrics}
 \end{table}
 
-The evaluation metrics of the classification model for the validation set are very similar to the ones for the test set. The classification model performs equally well on the test and validation set. The regression model however performed worse on the validation set. Both, the MSE and MAE are higher for the validation set than the test set. This could indicate that the regression model is overfitting.
+The evaluation metrics of the classification model for the test set are very similar to the ones for the validation set. The classification model performs equally well on the validation and test set. The regression model however performed worse on the test set. Both, the MSE and MAE are higher for the test set than the validation set. This could indicate that the regression model is overfitting.
 
 \subsection{Comparing the classification and regression model}
 \label{subsec:comparison_clas_reg}
 
+In order to compare the regression model to the classification model the predicted percentages of joint erosion were converted to Ratingen scores according to \autoref{subsec:ratingen}. The resulting confusion matrix is shown in \autoref{fig:comparison} and the corresponding evaluation metrics can be seen in \autoref{tab:comparison}.
 
 \begin{figure}[ht]
 \begin{tabular}{cc}
-\subfloat[Test]{\includegraphics[width = 2.5in]{reg_clas_test}} &
-\subfloat[Validation]{\includegraphics[width = 2.5in]{reg_clas_val}}
+\subfloat[Validation]{\includegraphics[width = 2.5in]{reg_clas_test}} &
+\subfloat[Test]{\includegraphics[width = 2.5in]{reg_clas_val}}
 \end{tabular}
 \caption{Confusion matrix of predictions of the regression model converted to classes.}
 \label{fig:comparison}
 \end{figure}
+
+When comparing the confusion matrix for the validation set to c) in \autoref{fig:confusion} and the confusion matrix for the test set to a) in \autoref{fig:validation}, we can see that the regression model is more accurate for the labels 0, 1 and 5 whereas the accuracy for the labels 2, 3 and 4 is lower. It also seems that are a more outliers compared to the classification model, for example observations with the true label 5 that are mistakenly predicted as label 1.
+
+\begin{table}[ht]
+\centering
+\caption{Evaluation metrics for regression.}
+\label{tab:comparison}
+\begin{tabular}{@{}lll@{}}
+\toprule
+                                & Validation    & Test      \\ \midrule
+Accuracy					    & 0.762 & 0.754  \\
+Normalized accuracy       & 0.449 & 0.429 \\
+Normalized  $\pm$ 1 accuracy & 0.799 & 0.788  \\
+
+\bottomrule
+\end{tabular}
+\end{table}
+
+The evaluation metrics are compared to c) in \autoref{tab:metrics_cla} for the validation set and \autoref{tab:validation_metrics} for the test set. For both the validation and the test set the accuracy of the regression model is higher, since the overrepresented class 1 is predicted more accurately. Whereas the class normalized accuracies are slightly lower than for the classification model.
+
 
 
 \subsection{Attention maps}
@@ -551,7 +572,7 @@ In order to see where the attention of the models lies, the outputs of intermedi
 \subfloat[Classification]{\includegraphics[width = 2.5in]{clas_attention}} &
 \subfloat[Regression]{\includegraphics[width = 2.5in]{reg_attention}}
 \end{tabular}
-\caption{Attention maps of the best two models for random samples of the test set}
+\caption{Attention maps of the best two models for random samples of the validation set}
 \label{fig:attention}
 \end{figure}
 
@@ -575,7 +596,7 @@ Visually, it appears like the separation between the different classes is a bit 
 \subsubsection{K-nearest-neighbor of embeddings}
 \label{subsubsec:knn_embeddings}
 
-By doing a k-nearest-neighbor (KNN) classification on the embeddings of the classification model we can see how well the model separates the different classes. The KNN classification achieved a class normalized accuracy of 31 \% which is worse than the class normalized accuracy achieved by the fully connected layers of the CNN of 42 \%. And also the class normalized accuracy $\pm$ 1 is worse with 63 \% compared to 82 \%.
+By doing a k-nearest-neighbor (KNN) classification on the embeddings of the classification model we can see how well the model separates the different classes. The KNN classification achieved a normalized accuracy of 31 \% which is worse than the normalized accuracy achieved by the fully connected layers of the CNN of 42 \%. And also the normalized $\pm$ 1 accuracy is worse with 63 \% compared to 82 \%.
 
 ??????????? compare to classification transfer learning embeddings
 
