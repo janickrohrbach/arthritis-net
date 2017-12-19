@@ -116,9 +116,10 @@ for (i in 1:length(m_2)) {
   m2_mean[i] <- mean(m_2[[i]])
 }
 
+#bad area (plot for thesis)
 boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
-        names = c("gute", "schlechte"),
-        main = "Schlechtes eck (mean)")
+        names = c("healthy joints (outliers)", "damaged joints"),
+        main = "", ylab = "Percentage of bone erosion")
 
 plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
      main = "schlechtes Eck (mean)", ylim = c(0, 0.2), xlab = c(0,100))
@@ -234,9 +235,10 @@ for (i in 1:length(m_2)) {
   m2_mean[i] <- mean(m_2[[i]])
 }
 
+#good area (plot for thesis)
 boxplot(list(unlist(m_mean), unlist(m2_mean)), notch = TRUE,
-        names = c("schlechte", "gute"),
-        main = "Gutes eck (mean)")
+        names = c("damaged joints (outliers)", "healthy joints"),
+        main = "", ylab = "Percentage of bone erosion")
 
 plot(x = density(x = m_mean, na.rm = TRUE), col = "blue",
      main = "gutes Eck (mean)", ylim = c(0, 0.2), xlab = c(0,100))
