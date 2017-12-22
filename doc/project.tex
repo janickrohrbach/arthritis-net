@@ -717,23 +717,13 @@ In order to determine whether there is a correlation between the bone erosion sc
 This surprising result suggests that the amount of bone erosion is only a minor factor in the disease activity. Aletaha et al. \cite{aletaha_2011} argue that cartilage damage is more clearly associated with physical damage than the bone destruction. These findings suggest that the bone erosion score is not an effective variable for predicting the DAS28.
 
 \clearpage
-\section{Discussion}
-\label{sec:discussion}
 
+\section{Discussion and outlook}
+\label{sec:discussion}
 
 In the previous sections, two final models were determined. One for classification and one for regression. When transforming the predictions of the regression model into classes, the normalized accuracies of the two models are almost equal. However, the predictions are very differently distributed. The classification model performs well for all classes. The regression model, however, performs clearly better for the extreme classes 0, 1, and 5 and worse for the classes 2, 3, and 4. 
 
 It is difficult to choose one model over the other. The classification model would be better suited if a better accuracy for the intermediate classes 2, 3, and 4 is desired, whereas the regression model is better suited if accurate predictions for the extreme classes 0, 1, and 5 are desired.
-
-An analysis of the outliers in the t-SNE shows that there might have been a bias when the images were scored. It seems that if a patient has many damaged joints, a healthy joint is more likely to get a worse score. The opposite is true as well.
-
-In the last section, we discovered that there is only a minor correlation between the percentage of bone erosion and the disease activity. While the bone erosion measures the physical damage to the joint, the disease activity score measures how much the patient suffers from the disease. Given bone erosion scores, it is almost impossible to draw conclusions regarding the disease activity.
-
-
-
-\newpage
-\section{Conclusion and outlook}
-\label{sec:conclusion}
 
 The predictions of the classification model give a good estimate for the Ratingen-score and the predictions of the regression model give a good estimate for the percentage of bone erosion. But the models are not as good as a trained professional. Many predictions are off by one Ratingen class, which corresponds to 20\% of bone erosion. Occasional outliers are as far off as 100\%, meaning that completely eroded joints are mistakenly classified as healthy joints. 
 
@@ -741,9 +731,11 @@ An automation of the scoring process would definitely save time since the predic
 
 Further research could examine whether the confidence for a prediction is a good indicator for outliers. In that case, the rheumatologist would only have to look at cases, where the model has a low confidence.
 
-The attention maps showed us that the model seemed to focus on the desired part of the image. A more sophisticated approach to detect which parts of the image are responsible for the predictions would be to visualize the occlusion sensitivity as proposed by Zeiler and Fergus \cite{zeiler_2013}. A grey rectangle is slid over the image to occlude different parts. For every position of the rectangle, a probability for the correct prediction can be calculated and shown on a heat map. 
+An analysis of the outliers in the t-SNE shows that there might have been a bias when the images were scored. It seems that if a patient has many damaged joints, a healthy joint is more likely to get a worse score. The opposite is true as well. Outliers need to be scored a second time by a rheumatologist in order to find out whether these images indeed were scored incorrectly.
 
-Since the bone erosion scores and the disease activity are only lightly positively correlated, it would be interesting to examine whether the disease activity could be predicted from the images. For this task, only a slight modification to our model is necessary. One could use the classification model and change its input layer depth to 10. Instead of color channels, every channel would hold an image of a different joint from one hand. The output layer would predict the DAS28 scores instead of the Rau-scores.
+In the last section, we discovered that there is only a minor correlation between the percentage of bone erosion and the disease activity. While the bone erosion measures the physical damage to the joint, the disease activity score measures how much the patient suffers from the disease. Given bone erosion scores, it is almost impossible to draw conclusions regarding the disease activity. It would be interesting to examine whether the disease activity can be predicted directly from the images. For this task, only a slight modification to our model is necessary. One could use the classification model and change its input layer depth to 10. Instead of color channels, every channel would hold an image of a different joint from one hand. The output layer would predict the DAS28 scores instead of the Rau-scores.
+
+The attention maps showed us that the model seemed to focus on the desired part of the image. A more sophisticated approach to detect which parts of the image are responsible for the predictions would be to visualize the occlusion sensitivity as proposed by Zeiler and Fergus \cite{zeiler_2013}. A grey rectangle is slid over the image to occlude different parts. For every position of the rectangle, a probability for the correct prediction can be calculated and shown on a heat map. 
 
 In addition, it should be investigated how different loss functions change the distribution of the predictions. For example, the output layer of the regression model could be changed to only one node and the CRPS loss function could be replaced with the MSE loss function.
 
