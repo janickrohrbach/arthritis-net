@@ -1,0 +1,81 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+ 
+
+```{r}
+rau <- read.csv(file = "~/Desktop/dl_project_1/correlation_analysis/merged.csv")
+clinical <- read.csv(file = "~/Desktop/dl_project_1/correlation_analysis/clinical_scores.csv")
+
+df <- merge(x = clinical, y = rau,
+            by.x = c("patient_id", "date"),
+            by.y = c("patient_id", "date_x"))
+
+loess_fit_bsr <- loess(das28bsr_score ~ rau_score, data = df, span = 0.2, degree = 1,
+                   family = "symmetric")
+loess_fit_crp <- loess(das283crp_score ~ rau_score, data = df, span = 0.2, degree = 1,
+                   family = "symmetric")
+nd <- data.frame(rau_score = seq(0, 190, 0.01))
+loess_pred_bsr <- predict(loess_fit_bsr, nd)
+loess_pred_crp <- predict(loess_fit_crp, nd)
+
+loess_df <- data.frame("x" = seq(0, 190, 0.01), 
+                       "bsr" = as.numeric(loess_pred_bsr),
+                       "crp" = as.numeric(loess_pred_crp))
+
+library(feather)
+write_feather(df, "df.feather")
+write_feather(loess_df, "loess.feather")
+
+print(cor(x = df$rau_score, y = df$das28bsr_score, use = "pairwise.complete.obs"))
+print(cor(df$rau_score, df$das283crp_score, use = "pairwise.complete.obs"))
+```
+
+```{python, engine.path="/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6m"}
+
+import feather
+import numpy as np
+
+df = feather.read_dataframe("df.feather")
+loess = feather.read_dataframe("loess.feather")
+
+from matplotlib import pyplot as plt
+from statsmodels.nonparametric.smoothers_lowess import lowess
+
+plt.xlabel('Rau-score')
+plt.ylabel('DAS 28 ESR')
+image = plt.hexbin(x=df["rau_score"], y=df["das28bsr_score"], gridsize=20, bins='log',
+           cmap=plt.cm.Spectral_r)
+
+plt.plot(loess["x"], loess["bsr"],'red',linewidth=2)
+
+cb = plt.colorbar(image)
+cb.set_label('log10(N)')
+
+plt.show()
+```
+
+```{python, engine.path="/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6m"}
+
+import feather
+import numpy as np
+
+df = feather.read_dataframe("df.feather")
+loess = feather.read_dataframe("loess.feather")
+
+from matplotlib import pyplot as plt
+from statsmodels.nonparametric.smoothers_lowess import lowess
+
+plt.xlabel('Rau-score')
+plt.ylabel('DAS 28 CRP')
+image = plt.hexbin(x=df["rau_score"], y=df["das283crp_score"], gridsize=20, bins='log',
+           cmap=plt.cm.Spectral_r)
+
+plt.plot(loess["x"], loess["crp"],'red',linewidth=2)
+
+cb = plt.colorbar(image)
+cb.set_label('log10(N)')
+
+plt.show()
+```
