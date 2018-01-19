@@ -13,7 +13,12 @@ Below is a list of the files in this repository with a description of what they 
 
 | Filepath                                                    | Description   |
 | ----------------------------------------------------------- |:-------------:|
-| [/correlation_analysis](../master/correlation_analysis)     | In this folder |
+| [/correlation_analysis/correlation_analysis.ipynb](../master/correlation_analysis/correlation_analysis.ipynb)     | Jupyter Notebook that shows correlations between the Rau-score and the DAS-score |
+| [/correlation_analysis/plots_for_thesis.Rmd](../master/correlation_analysis/plots_for_thesis.Rmd)     | R-Markdown file used to create the correlation plots for the thesis |
+| [arthritis-net/doc/img/](../master/doc/img/)     | This folder contains all images used in the thesis |
+| [arthritis-net/doc/project.pdf](../master/doc/project.pdf)     | The thesis |
+| [arthritis-net/doc/project.tex](../master/doc/project.tex)     | The LaTex file for the thesis|
+| [arthritis-net/doc/project.tex](../master/doc/project.tex)     | The BibTex file with the references of the thesis|
 
 
  
