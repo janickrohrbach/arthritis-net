@@ -12,7 +12,7 @@ All jupyter notebooks can be run on the following docker container: [tensorflow:
 Below is a list of the files in this repository with a description of what they are used for.
 
 | Filepath                                                    | Description   |
-| ----------------------------------------------------------- |:-------------:|
+| ----------------------------------------------------------- | ------------- |
 | [/correlation_analysis/correlation_analysis.ipynb](../master/correlation_analysis/correlation_analysis.ipynb)     | Jupyter Notebook that shows correlations between the Rau-score and the DAS-score |
 | [/correlation_analysis/plots_for_thesis.Rmd](../master/correlation_analysis/plots_for_thesis.Rmd)     | R-Markdown file used to create the correlation plots for the thesis |
 | [arthritis-net/doc/img/](../master/doc/img/)     | This folder contains all images used in the thesis |
