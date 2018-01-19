@@ -19,6 +19,8 @@ Below is a list of the files in the master branch of this repository with a desc
 | [/doc/project.pdf](../master/doc/project.pdf)     | The thesis |
 | [/doc/project.tex](../master/doc/project.tex)     | The LaTex file for the thesis|
 | [/doc/project.tex](../master/doc/project.tex)     | The BibTex file with the references of the thesis|
+| [/tensorboard/](../master/tensorboard/)     | This folder contains all the tensorboard logs from the training of the models|
+| [/tsne/tsne_regression.R](../master/tsne/tsne_regression.R)     | This R-script contains an analysis of the outliers in the T-SNE|
 | [attention_map_classification.ipynb](../master/attention_map_classification.ipynb)     | Jupyter notebook that shows the attention map of the classification model|
 | [attention_map_regression.ipynb](../master/attention_map_classification.ipynb)     | Jupyter notebook that shows the attention map of the regression model|
 | [deepxray_classification_weights.ipynb](../master/deepxray_classification_weights.ipynb)     | Jupyter notebook used for the training of the classification model with weighted loss function|
