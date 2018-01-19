@@ -6,7 +6,7 @@ In fall 2017 I wrote a project thesis at the Zurich University of Applied Scienc
 
 The thesis can be found here: [project.pdf](../master/doc/project.pdf)
 
-All jupyter notebooks can be run on the following docker container: [tensorflow:1.4.0-gpu-py3](gcr.io/tensorflow/tensorflow:1.4.0-gpu-py3)
+All jupyter notebooks can be run on the following docker container: [tensorflow:1.4.0-gpu-py3](https://gcr.io/tensorflow/tensorflow:1.4.0-gpu-py3)
 
 ## Files
 
