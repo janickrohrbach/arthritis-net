@@ -9,7 +9,7 @@ The thesis can be found here: [/doc/project.pdf](../master/doc/project.pdf)
 All jupyter notebooks can be run on the following docker container: [tensorflow:1.4.0-gpu-py3](https://gcr.io/tensorflow/tensorflow:1.4.0-gpu-py3)
 
 ## Files
-Below is a list of the files in this repository with a description of what they are used for.
+Below is a list of the files in the master branch of this repository with a description of what they are used for. There is also the model_selection branch which contains the other models which were not selected.
 
 | Filepath                                                    | Description   |
 | ----------------------------------------------------------- | ------------- |
